@@ -1,3 +1,10 @@
+<!-- <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: {inlineMath: [['$', '$']]}, messageStyle: "none" });
+</script> -->
+
+*搬运工：保罗史蒂芬乔治洪 ~ paul.ht*
+
 **布局结构**：
 + Python
 	+ Pytorch
@@ -8,7 +15,102 @@
 + Linux
 + Mac
 + Markdown
++ LaTex
 + Others
+---
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Python](#python)
+  - [Pytorch](#pytorch)
+    - [Tensor](#tensor)
+    - [Relu](#relu)
+    - [torchvision](#torchvision)
+    - [cv2的坑](#cv2的坑)
+    - [单节点多卡](#单节点多卡)
+    - [multinomial](#multinomial)
+  - [Tensorflow](#tensorflow)
+    - [tf.Session()](#tfsession)
+    - [tensorflow 之 checkpoint](#tensorflow-之-checkpoint)
+    - [选择GPU](#选择gpu)
+    - [tf.nn](#tfnn)
+    - [卷积探讨](#卷积探讨)
+    - [感受野](#感受野)
+    - [ResNet](#resnet)
+    - [(N,C,W,H)](#ncwh)
+  - [Python](#python-1)
+    - [np.clip()](#npclip)
+    - [排序](#排序)
+    - [zip](#zip)
+    - [eval()](#eval)
+    - [f-string](#f-string)
+    - [glob](#glob)
+    - [os.path.dirname(\_\_file\_\_)](#ospathdirname__file__)
+    - [argparse](#argparse)
+      - [bool型argparse 坑](#bool型argparse-坑)
+    - [class](#class)
+    - [\_\_call\_\_()](#__call__)
+    - [Python函数——传对象(call by object)](#python函数传对象call-by-object)
+    - [globals()](#globals)
+    - [zfill](#zfill)
+    - [ravel() & flatten()](#ravel-flatten)
+    - [np.rollaxis（）](#nprollaxis)
+    - [matplotlib](#matplotlib)
+  - [opencv2](#opencv2)
+    - [resize](#resize)
+- [MATLAB](#matlab)
+    - [MATLAB bsxfun](#matlab-bsxfun)
+  - [Python 与 MATLAB的一些函数区别（细节）](#python-与-matlab的一些函数区别细节)
+    - [复数域](#复数域)
+- [Linux](#linux)
+    - [bash](#bash)
+    - [adduser](#adduser)
+    - [ls](#ls)
+    - [软链接](#软链接)
+    - [ssh](#ssh)
+    - [查看CPU GPU使用情况](#查看cpu-gpu使用情况)
+    - [输出机制](#输出机制)
+    - [export & echo](#export-echo)
+    - [tar](#tar)
+    - [scp](#scp)
+    - [Ctrl类快捷键](#ctrl类快捷键)
+    - [查看位置](#查看位置)
+    - [Linux查看文件大小数量](#linux查看文件大小数量)
+    - [Linux 查看硬盘分区内存](#linux-查看硬盘分区内存)
+    - [ps ax | grep python](#ps-ax-grep-python)
+    - [windows 远程连接 linux](#windows-远程连接-linux)
+    - [rename](#rename)
+    - [vim](#vim)
+    - [~/.vimrc](#~vimrc)
+    - [我的~/.vimrc](#我的~vimrc)
+    - [vim自动补全](#vim自动补全)
+    - [vim Bundle](#vim-bundle)
+    - [pip](#pip)
+    - [conda](#conda)
+    - [Linux更改默认Python版本](#linux更改默认python版本)
+    - [查看网关](#查看网关)
+    - [slurm集群管理](#slurm集群管理)
+    - [tmux](#tmux)
+    - [$PATH](#path)
+- [Mac](#mac)
+    - [常用快捷键](#常用快捷键)
+    - [新建文件](#新建文件)
+    - [隐藏文件](#隐藏文件)
+- [Markdown](#markdown)
+    - [Markdown 超链接](#markdown-超链接)
+    - [Markdown 空格](#markdown-空格)
+    - [Markdown 代码](#markdown-代码)
+    - [Markdown 公式](#markdown-公式)
+    - [Markdown 图片](#markdown-图片)
+    - [Markdown 目录](#markdown-目录)
+- [LaTex](#latex)
+    - [VSCODE 编译器](#vscode-编译器)
+- [Others](#others)
+    - [server config(~2019.7)](#server-config~20197)
+
+<!-- /code_chunk_output -->
 
 ---
 
@@ -56,7 +158,7 @@ Variable转cpu，gpu使用`v.data`
 
 `torch.nn.Relu(inplace=False)`
 
-inplace为True，将会改变输入的数据 ，否则不会改变原输入，只会产生新的输出。
+inplace为True，将会改变输入的数据 ，否则不会改变原输入，只会产生新的输出。默认为False。
 
 ---
 ### torchvision
@@ -81,7 +183,7 @@ model, optimizer 等均可用DataParallel包裹，即表示用多块GPU训练。
 以model为例，其一旦被DataParallel包裹之后，其对应的参数state_dict的keys前会多七个字符，即`module.`。所以在读写checkpoint时需注意，单卡时不能有`module.`，所以读取一个多卡训练的checkpoint，中间需加入`.module`，即由`model.state_dict()` 变为`model.module.state_dict()`，其实就相当于把读取的参数字典的keys去掉了前七个字符`module.`。
 当然了，若果存储模型时就选择单卡型，即
 
-    torch.save({'model': model.module.state_dict(), save_path)
+    torch.save({'model': model.module.state_dict()}, save_path)
 则读取时就不需进行去module的操作。
 同理，读取单卡checkpoint进行多卡训练时，按单卡代码定义好model(注意此时从CPU转到GPU上，即末尾加个`.cuda()`或`.to(devices)`，device需定义一下，可为`'cuda'`),optimizer等，最后加一个
     
@@ -141,7 +243,7 @@ tensorflow由Session.run()或eval()返回的任何张量都是numpy数组类型�
 ---
 ### tf.nn
 >
-1) 如果只是想快速了解一下大概，不建议使用`tf.nn.conv2d`类似的函数，可以使用`tf.layers`和`tf.contrib.layers`高级函数  
+1) 如果只是想快速了解一下大概，不建议使用`tf.nn.conv2d`类似的函数，可以使用`tf.layers`和`tf.contrib.layers`高级函数。  
 2) 当有了一定的基础后，如果想在该领域进行深入学习，建议使用`tf.nn.conv2d`搭建神经网络，此时会帮助你深入理解网络中参数的具体功能与作用，而且对于loss函数需要进行正则化的时候很便于修改，能很清晰地知道修改的地方。而如果采用`tf.layers`和`tf.contrib.layers`高级函数，由于函数内部有正则项，此时，不利于深入理解。而且如果编写者想自定义loss，此时比较困难，如果读者想共享参数时，此时计算loss函数中的正则项时，应该只计算一次，如果采用高级函数可能不清楚到底如何计算的。
 
 ---
@@ -174,15 +276,15 @@ $$m = \lfloor \frac{n-1}{s} + 1 \rfloor $$
 
 ---
 ### 感受野
-$$ RF_n = RF_{n-1} + (kernelsize - 1) * stride $$
+$$ RF_n = RF_{n-1} + (kernel\_size - 1) * stride $$
 
 RF(n): 当前层感受野
 RF(n-1): 上一层感受野
 kernel_size: 当前层卷积核大小
 stride: 之前所有层stride的乘积
 
-特殊: 二维stride=1时，layer层，每层kernel大小均为k（即k x k），则最后一层像素点感受野为
-$$ (kernel - 1) * layer + 1 $$
+特殊: 二维stride=1时，共$l$层，每层kernel大小均为$k$（即$k \times k$），则最后一层像素点感受野为
+$$ (k - 1) * l + 1 $$
 
 ---
 ### ResNet
@@ -244,16 +346,17 @@ eval()函数十分强大，官方demo解释为：将字符串str当成有效的�
 	for img in imgs:
 		print(os.path.split(img)[-1])
 
-总结：`glob.glob`的参数是一个只含有方括号、问号、正斜线的正则表达式，同时也是shell命令（就是那些我们用在cd命令后面的参数）。
+总结：`glob.glob`的参数是一个只含有方括号、问号、正斜线的正则表达式，同时也是shell命令。
 
 ---
 ### os.path.dirname(\_\_file\_\_)
-* 当`print os.path.dirname(__file__)`所在脚本是以完整路径被运行的， 那么将输出该脚本所在的完整路径，比如：   
+在脚本test.py里写入`print(os.path.dirname(__file__))`。
+* 当脚本是以完整路径被运行的， 那么将输出该脚本所在的完整路径，比如：   
     ```
     python d:/pythonSrc/test/test.py
     输出: d:/pythonSrc/test
     ```
-* 当`print os.path.dirname(__file__)`所在脚本是以相对路径被运行的， 那么将输出空目录，比如：
+* 当脚本是以相对路径被运行的， 那么将输出空目录，比如：
     ```
     python test.py
     输出: 空字符串
@@ -509,7 +612,7 @@ cv2读取图片默认为BGR模式，且`imshow`, `imwrite`也都对应BGR模式�
 
 	img_rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-注意Image包(`from PIL import Image`)读取图片时会取该图片的实际通道数，而.png等类型图片会有4个通道，即除R、G、B三个外还有一个透明度A, 以R为例，此时计算公式为：\\( R = \alpha * R + (1-\alpha) * A \\), \\( \alpha=1 \\)时即对应RGB。故若Image读取此类图只想得到RGB三通道，需
+注意Image包(`from PIL import Image`)读取图片时会取该图片的实际通道数，而.png等类型图片会有4个通道，即除R、G、B三个外还有一个透明度A, 以R为例，此时计算公式为：$R = \alpha * R + (1-\alpha) * A $， $\alpha=1 $时即对应RGB。故若Image读取此类图只想得到RGB三通道，需
 
 	Image.open(img_path).convert('RGB')
 
@@ -567,6 +670,11 @@ Python中则**A.T**表示A的转置，`A.conjugate()`或者`np.conjugate(A)`表�
 shell开头写
     
     #!/bin/bash
+
+---
+### adduser
+
+增加用户
 
 ---
 
@@ -642,13 +750,13 @@ linux环境下每次新打开一个窗口都会预执行`~/.bashrc`。
 case1:
 tmux环境下，左边窗口export, 右边窗口echo为空。
 case2:
-在当前窗口中新建一个脚本ht.sh，vim ht.sh, 在其中export, 关键脚本bing bash ht.sh后， echo也为空。
+在当前窗口中新建一个脚本ht.sh，vim ht.sh, 在其中export, 关掉脚本并 bash ht.sh后， echo也为空。
 若export写进~/.bashrc, 则一直生效。
 case3:
 在当前窗口export, 然后vim ht.sh，在里面echo有值。
 
 发散：**配置CUDA环境**
-应在主函数开头便写好 `export CUDA_HOME=...` 等
+应在主函数开头便写好 `export CUDA_HOME=...` 等；
 若想一直生效，写进`~/.bashrc`即可。
 
 ---
@@ -701,6 +809,12 @@ case3:
 But failed!
 
 建议先打包(压缩)再复制。
+
+### Ctrl类快捷键
+`Ctrl+A`: 光标移到行首。
+`Ctrl+E`: 光标移到行尾。
+`Ctrl+S`：冻结窗口。注意：这不是保存的命令。当屏幕输出过快时，用户可冻结窗口来查看瞬时的输出。
+`Ctrl+Q`：取消冻结窗口。
 
 ### 查看位置
 
@@ -807,7 +921,8 @@ But failed!
 取消则：`set nopaste`
 	
 替换文字:  
-全部替换(将from替换为to):  `%s/from/to/g`
+在末行模式输入: `{作用范围}s/{目标}/{替换}/{替换标志}`
+例如:`%s/foo/bar/g`会在全局范围(%)查找foo并替换为bar，所有出现都会被替换（g）。
 
 ---
 ### ~/.vimrc
@@ -825,7 +940,7 @@ cindent Vim可以很好的识别出C和Java等结构化程序设计语言，并�
 
 	:set cindent
 
-smartindent 在这种缩进模式中，每一行都和前一行有相同的缩进量，同时这种缩进形式能正确的识别出花括号，当遇到右花括号（}），则取消缩进形式。此外还增加了识别C语言关键字的功能。如果一行是以#开头的，那么这种格式将会被特殊对待而不采用缩进格式。可以使用以下命令，启用smartindent缩进结构：
+smartindent 在这种缩进模式中，每一行都和前一行有相同的缩进量，同时这种缩进形式能正确的识别出花括号，当遇到右花括号`}`，则取消缩进形式。此外还增加了识别C语言关键字的功能。如果一行是以#开头的，那么这种格式将会被特殊对待而不采用缩进格式。可以使用以下命令，启用smartindent缩进结构：
 
 	:set smartindent
 
@@ -876,11 +991,11 @@ autoindent 在这种缩进形式中，新增加的行和前一行使用相同的
 
     git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 
-**·** YouCompleteMe安装完成，即在vim末行运行`:PluginInstall`后，需进入其文件夹下运行：
+**·** YouCompleteMe安装完成时，即在vim末行运行`:PluginInstall`后，需进入其文件夹下运行：
 
     ./install.py
 
-注：此时需要已经安装cmake；YCM文件夹里的第三方库里有谷歌的，笔者有一段时间下不下来。(发挥聪明才智，把以前编译好的YCM文件夹直接拷过去就好了)
+注：此时需要已经安装cmake；YCM文件夹里的第三方库里有谷歌的成分，笔者有一段时间下载不了。(发挥聪明才智，把以前编译好的YCM文件夹直接拷过去就好了)
 
 **·** 清除不要的插件，在 .vimrc 中注释掉对应行后，在末行模式运行：
 
@@ -980,7 +1095,7 @@ pip是python自带的，而conda是安装anaconda或者miniconda提供的，俗�
     tmux rename-session -t [old-name] [new-name]
 
 ---
-### $PTAH
+### $PATH
 配置环境变量，需加入某个应用时，将相应bin文件的路径添加到 ~/.bashrc 文件中。如：
 
     export PATH="$PATH:/home/hongt/anaconda3/bin"
@@ -1050,11 +1165,35 @@ code
 基本与Latex语法一致，但\\在Markdown中为转义字符，故行内公式$ A $ 变为 **\\\\( A \\\\)**。（A代指公式）
 用visual studio code编辑则`$ $` 或 `$$ $$`即可。
 
+用VSCODE预览公式时没问题，但导出为pdf，html等时公式仍显示源码。解决办法有二，其一为在文档开头写入：
+```
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: {inlineMath: [['$', '$']]}, messageStyle: "none" });
+</script>
+```
+
+其二为在VSCODE中安装`Markdown+Math`插件。
+
 ### Markdown 图片
 插入GitHub上的图片预览不能显示时，把图片链接地址中的 `blob` 换成 `raw` 即可！
 
+### Markdown 目录
+用VSCODE编译，将光标置入待插入位置，按`Ctrl+Shift+P`，在弹出框里输入`ctoc`即可。
+
+---
+# LaTex
+
+### VSCODE 编译器
+`Ctrl + Alt + B ` 一次编译
+`Ctrl + Alt + R` 选择recipe，此时才能显示目录、摘要等。
+
+参考：[LaTeX技巧932：如何配置Visual Studio Code作为LaTeX编辑器[新版更新]](https://www.latexstudio.net/archives/12260.html)
+
 ---
 # Others
+
+### server config(~2019.7)
 
 anjie：
 python3.6.2
