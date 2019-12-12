@@ -26,9 +26,12 @@
 - [Python](#python)
 	- [Pytorch](#pytorch)
 		- [Tensor](#tensor)
+		- [torchvision.save_image](#torchvisionsaveimage)
 		- [Relu](#relu)
+		- [nn.ConvTranspose2d](#nnconvtranspose2d)
 		- [torchvision](#torchvision)
 		- [cv2的坑](#cv2%e7%9a%84%e5%9d%91)
+		- [调节学习率](#%e8%b0%83%e8%8a%82%e5%ad%a6%e4%b9%a0%e7%8e%87)
 		- [单节点多卡](#%e5%8d%95%e8%8a%82%e7%82%b9%e5%a4%9a%e5%8d%a1)
 		- [multinomial](#multinomial)
 	- [Tensorflow](#tensorflow)
@@ -81,6 +84,7 @@
 		- [Linux 查看硬盘分区内存](#linux-%e6%9f%a5%e7%9c%8b%e7%a1%ac%e7%9b%98%e5%88%86%e5%8c%ba%e5%86%85%e5%ad%98)
 		- [查看/杀死 进程](#%e6%9f%a5%e7%9c%8b%e6%9d%80%e6%ad%bb-%e8%bf%9b%e7%a8%8b)
 		- [ps ax | grep python](#ps-ax--grep-python)
+		- [dos2unix](#dos2unix)
 		- [windows 远程连接 linux](#windows-%e8%bf%9c%e7%a8%8b%e8%bf%9e%e6%8e%a5-linux)
 		- [rename](#rename)
 		- [vim](#vim)
@@ -155,11 +159,26 @@ Variable转cpu，gpu使用`v.data`
 注：torch 0.4.0及其后续版本合并了Variable与Tensor，故Variable不再使用。
 
 ---
+### torchvision.save_image
+	mul(255).add_(0.5).clamp(0, 255).permute(1, 2, 0).to('cpu', torch.uint8)
+
+对于uint8类型，torch与numpy均为**向下取整**，故先+0.5再clamp。
+
+	torch.Tensor: a.to(torch.uint8)
+	numpy.array: a.astype(np.uint8)
+
+---
 ### Relu
 
 `torch.nn.Relu(inplace=False)`
 
 inplace为True，将会改变输入的数据 ，否则不会改变原输入，只会产生新的输出。默认为False。
+
+---
+### nn.ConvTranspose2d
+$H_{out} = (H_{in} - 1)\times stride - 2p + dilation\times (k-1) + output\_padding + 1$
+
+反卷积即对应上采样过程，HW大小的计算对应卷积计算公式的逆过程。 nn.ConvTranspose2d函数默认参数为：dilation=1, output_padding=0。
 
 ---
 ### torchvision
@@ -175,6 +194,18 @@ inplace为True，将会改变输入的数据 ，否则不会改变原输入，�
 `img = img[:, :, -1].copy()`
 解决方案二：
 `img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)`
+
+---
+### 调节学习率
+在Pytorch 1.1.0及以后的版本中，应先更新优化器optimizer，再更新学习率，代码框架可如下所示：
+
+	scheduler = ...
+	for epoch in range(100):
+		train(...)
+		validate(...)
+		scheduler.step()
+[How to adjust Learning Rate](https://pytorch.org/docs/stable/optim.html?highlight=lr#torch.optim.lr_scheduler.MultiStepLR '官方文档')
+>Prior to PyTorch 1.1.0, the learning rate scheduler was expected to be called before the optimizer’s update; 1.1.0 changed this behavior in a BC-breaking way. If you use the learning rate scheduler (calling scheduler.step()) before the optimizer’s update (calling optimizer.step()), this will skip the first value of the learning rate schedule. If you are unable to reproduce results after upgrading to PyTorch 1.1.0, please check if you are calling scheduler.step() at the wrong time.
 
 ---
 ### 单节点多卡
@@ -874,6 +905,10 @@ But failed!
 再在自己电脑浏览器中输入 服务器IP:8000 即可访问该目录。
 
 ---
+### dos2unix
+因格式原因，有时候文件从windows复制到linux系统后执行会报错，比如代码文件中的回车空格等问题。先执行一句 `dos2unix(filename)` 即可.
+
+---
 ### windows 远程连接 linux
 
 **linux**上安装**xrdp**
@@ -1056,6 +1091,11 @@ autoindent 在这种缩进形式中，新增加的行和前一行使用相同的
     conda config --add channels https://mirrors.tuna.tsinghua.edu.cn/anaconda/pkgs/free/
     搜索时显示通道地址：
     conda config --set show_channel_urls yes
+	恢复默认源：
+	conda config --remove-key channels
+	显示所有源：
+	conda config --show channels
+
     没有直接重命名，so间接方式：
     conda create --name [newname] --clone [oldname]
 
