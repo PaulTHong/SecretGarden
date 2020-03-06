@@ -26,6 +26,8 @@
 - [Python](#python)
 	- [Pytorch](#pytorch)
 		- [Tensor](#tensor)
+		- [item()](#item)
+		- [torchvision.transforms](#torchvisiontransforms)
 		- [torchvision.save_image](#torchvisionsaveimage)
 		- [Relu](#relu)
 		- [nn.ConvTranspose2d](#nnconvtranspose2d)
@@ -34,6 +36,8 @@
 		- [调节学习率](#%e8%b0%83%e8%8a%82%e5%ad%a6%e4%b9%a0%e7%8e%87)
 		- [单节点多卡](#%e5%8d%95%e8%8a%82%e7%82%b9%e5%a4%9a%e5%8d%a1)
 		- [multinomial](#multinomial)
+		- [load_lua -> torchfile.load](#loadlua---torchfileload)
+		- [num_works](#numworks)
 	- [Tensorflow](#tensorflow)
 		- [tf.Session()](#tfsession)
 		- [tensorflow 之 checkpoint](#tensorflow-%e4%b9%8b-checkpoint)
@@ -43,8 +47,11 @@
 		- [感受野](#%e6%84%9f%e5%8f%97%e9%87%8e)
 		- [ResNet](#resnet)
 		- [(N,C,W,H)](#ncwh)
+		- [优化器](#%e4%bc%98%e5%8c%96%e5%99%a8)
+		- [training accuracy](#training-accuracy)
 	- [Python](#python-1)
 		- [np.clip()](#npclip)
+		- [np.random.choice()](#nprandomchoice)
 		- [排序](#%e6%8e%92%e5%ba%8f)
 		- [zip](#zip)
 		- [eval()](#eval)
@@ -55,12 +62,15 @@
 			- [bool型argparse 坑](#bool%e5%9e%8bargparse-%e5%9d%91)
 		- [class](#class)
 		- [\_\_call\_\_()](#call)
+		- [\_\_dir\_\_()](#dir)
 		- [Python函数——传对象(call by object)](#python%e5%87%bd%e6%95%b0%e4%bc%a0%e5%af%b9%e8%b1%a1call-by-object)
 		- [globals()](#globals)
 		- [zfill](#zfill)
 		- [ravel() & flatten()](#ravel--flatten)
 		- [np.rollaxis（）](#nprollaxis)
 		- [matplotlib](#matplotlib)
+		- [plt.plot()](#pltplot)
+	- [!Plot_tick](#plottick)
 	- [opencv2](#opencv2)
 		- [resize](#resize)
 - [MATLAB](#matlab)
@@ -111,8 +121,11 @@
 		- [Markdown 图片](#markdown-%e5%9b%be%e7%89%87)
 		- [Markdown 目录](#markdown-%e7%9b%ae%e5%bd%95)
 - [LaTex](#latex)
-		- [VSCODE 编译器](#vscode-%e7%bc%96%e8%af%91%e5%99%a8)
+		- [VSCode 编译器](#vscode-%e7%bc%96%e8%af%91%e5%99%a8)
+		- [一些符号代码](#%e4%b8%80%e4%ba%9b%e7%ac%a6%e5%8f%b7%e4%bb%a3%e7%a0%81)
 - [Others](#others)
+		- [paper writing](#paper-writing)
+			- [插入图片](#%e6%8f%92%e5%85%a5%e5%9b%be%e7%89%87)
 		- [server config(~2019.7)](#server-config20197)
 
 <!-- /code_chunk_output -->
@@ -143,7 +156,22 @@
 
 会改变tensor的函数操作会用一个下划线后缀来标示。比如，`torch.FloatTensor.abs_()`会在原地计算绝对值，并返回改变后的tensor，而`tensor.FloatTensor.abs()`将会在一个新的tensor中计算结果。
 
+若将数据`a`由`torch.DoubleTensor()`转化为`torch.FloatTensor()`，可记为
+`a.float() 或 a.to(torch.float32)`。
+
 ![Tensor](https://github.com/PaulTHong/SecretGarden/raw/master/images/torch_Tensor.png)
+
+---
+### item()
+`item()`只针对仅含一个元素的张量，取出其值。若为多个元素的张量，可考虑`tolist()`。
+
+---
+### torchvision.transforms
++ `torchvision.transforms.ToTensor()`
+输入为`PIL.Image`类型 或`numpy.array`中的`numpy.uint8`类型时，才会对其归一化(scale)，即除以255。
+
++ `transforms`中的一些变换如`Resize(), Crop()`等输入必为`Image`型，`numpy.array`会报错。
++ 注：`pytorch`的图片接口为`PIL.Image`库，该库读取的图片类型为`Image.Image`，而`cv2`读取的图片则与`numpy`库一致，即`numpy.ndarray`型。
 
 ---
 t 代指数据：  
@@ -157,6 +185,7 @@ Variable转cpu，gpu使用`v.data`
 注意：`y = Variable(t.cuda())`生成一个节点y，`y = Variable(t).cuda()`，生成两个计算图节点t和y
 
 注：torch 0.4.0及其后续版本合并了Variable与Tensor，故Variable不再使用。
+GPU上的Tensor不能直接转为numpy，需先转为CPU上的Tensor再转为numpy。
 
 ---
 ### torchvision.save_image
@@ -234,6 +263,18 @@ model, optimizer 等均可用DataParallel包裹，即表示用多块GPU训练。
 按权重张量input的概率采样num_samples次。
 
 参考：[torch.multinomial()理解](https://blog.csdn.net/monchin/article/details/79787621)
+
+---
+### load_lua -> torchfile.load
+pytorch由0.4版本升级为1.0+版本后，一些函数会发生变化。
+对于训好的老式参数模型，读取函数由`load_lua`变为`torchfile.load`。
+在一次实际操作中，记读取的模型为`vgg`，则其第一层的权重调用方式由`vgg.get(0).weight` 变为`vgg.modules[0].weight`。
+
+---
+### num_works
+`torch.utils.data.DataLoader`常以batch的方式读取数据，其参数`num_works`表示所用核数（并行读取）。
+但需注意一次需运行两个神经网络时，且两个神经网络有数据联系时，有一种报错取`num_works=0`即可解决。
+例如在风格迁移做数据增强的实验中，风格迁移本身需调用一个VGG网络结构，而分类采用的ResNet50。
 
 ---
 ## Tensorflow
@@ -327,6 +368,12 @@ Bottleneck每个block出去channel 为 planes * expansion, 如 512 * 4 。
 
 tensorflow默认为NHWC，其访存局部性更好；而NCHW为GPU推荐方式。
 
+### 优化器
+据说SGD比ADAM稳定。
+
+### training accuracy
+某些情况下全体数据集上的training accuracy显示为100%时不一定为100%，如在采用BatchNormalization模块时，$\mu$和$\sigma$随着batch变化而变化，而训练集上的准确度是以batch为单位来测量的。
+
 ---
 ## Python
 
@@ -334,6 +381,14 @@ tensorflow默认为NHWC，其访存局部性更好；而NCHW为GPU推荐方式�
 ### np.clip()
 
 上下界截取。
+
+---
+### np.random.choice()
+`random.choice()`函数每次只能选择一个，而`np.random.choice()`则可选择多个，但需注意一个默认的参数`replace=True`，表示选取的元素可能重复。
+
+如下代码表示从`a`中不重复地选取三个元素，`a`可以是`list`、`np.array`等类型，其中每一个元素被选到的比例均记录在参数`p`中。
+`np.random.choice(a, 3, replace=False, p=[*])`
+
 
 ---
 ### 排序
@@ -466,6 +521,10 @@ class里面有多个类的属性时，如多个全连接层fc1, fc2, fc3：
 > 所有的函数都是可调用对象。
 
 > 一个类实例也可以变成一个可调用对象，只需要实现一个特殊方法`__call__()`
+
+---
+### \_\_dir\_\_()
+取类的属性，如`a.__dir__()`，`a`表示一个类的对象。
 
 ---
 ### Python函数——传对象(call by object)
@@ -623,6 +682,26 @@ matplotlib经常用在python shell中用作交互式编程，也有将其作为�
 **Agg**是一个非交互式后端，这意味着它不会显示在屏幕上，只保存到文件。
 
 ---
+### plt.plot()
+`from matplotlib import pyplot as plt`
++ **保存图片**
+  `plt.savefig()`函数第一个参数为保存路径，如*.png，但png等格式图片清晰度有损，而存为*.svg为无损格式，svg格式可通过浏览器打开。另一个参数为`dpi`，其值越大图片的分辨率越高，`dpi=500`在一定程度上已经很清晰了。
++ **调节坐标轴刻度**
+  基础些的为`xticks，yticks`，`xticks(position, label, rotation)`表示在position位置标注label，这两个一般为List型，rotation控制标注的旋转。
+  而进阶一点则可借助`MultipleLocator`，其后的参数表示刻度间距，而对应的在`xlim, ylim`取值错开一点可使第一个标注点不在原点。
+  如下例所示：
+  ```
+  from matplotlib.pyplot import MultipleLocator
+  ...
+  plt.xticks(range(2, 21, 2), list(range(2, 21, 2)))
+  ax = plt.gca()
+  y_major_locator = MultipleLocator(2)
+  ax.yaxis.set_major_locator(y_major_locator)
+  plt.ylim(57.5, 76.5)
+  ...
+  ```
+  ![Plot_tick](https://github.com/PaulTHong/SecretGarden/raw/master/images/plot_tick.png)
+---
 ## opencv2
 
 ---
@@ -720,7 +799,9 @@ ls隐藏pyc文件：
 
 ---
 ### 软链接
-`ln -s 原链接 软链接 `
+`ln -s 原链接路径 软链接路径 `
+
+在链接路径有多层嵌套时，建议采用绝对路径避免出错。
 
 ---
 ### ssh
@@ -769,9 +850,13 @@ stdout和stderr两种模式，对应编号分别为1和2。
     [cmd] >>[filename] 2>&1  
     [cmd] |tee -a [file]
 
-推荐egg:
+推荐eg.:
     
     python -u train.py |tee train.log
+
+注：
+命令行结尾有`&`相当于并行，即在一个终端窗口里各命令可以同时运行，运行了一行命令后可以继续输入。
+而没有`&`相当于串行，按顺序执行命令，前一命令运行结束后才会运行下一条命令，但前提是前一命令能正常运行，不会报错。
 
 ---
 ### export & echo
@@ -794,12 +879,15 @@ case3:
 ---
 ### tar
 
-	-c: 建立压缩档案
+	-c: create, 建立压缩档案
 	-x：解压
+	-z，-j：分别表示以gzip和bzip2格式压缩解压
+	-v: 显示解压或压缩过程
+	-C：指定目录，需提前创建
 	-t：查看内容
 	-r：向压缩归档文件末尾追加文件
 	-u：更新原压缩包中的文件
-	-f: (必须参数)使用档案名字，切记，这个参数是最后一个参数，后面只能接档案名。
+	-f: (必需参数)使用档案名字，该参数是最后一个参数，后面只能接档案名。
 
 解压：
 
@@ -830,6 +918,9 @@ case3:
 	rar a jpg.rar *.jpg //rar格式的压缩，需要先下载rar for linux
 
 	zip jpg.zip *.jpg //zip格式的压缩，需要先下载zip for linux
+
+注：若压缩时想排除一些文件或文件夹，可借助`--exclude`参数，排除多个文件(夹)时则使用多次`--exclude`，另排除的文件夹最后不要加`/`。例如：
+`tar -czvf ht.tar.gz images --exclude=1.png --exclude=images/monkey`
 
 ---
 ### scp
@@ -1126,6 +1217,25 @@ pip是python自带的，而conda是安装anaconda或者miniconda提供的，俗�
 
 ---
 ### slurm集群管理
+`srun`，`sbatch`和`salloc`为三大提交任务命令。`salloc`为交互式，任务结束后不一定及时释放资源，对于按时长收费的集群请慎重；个人喜欢用`srun`，其与`2>&1 |tee [log name]`配合，可以在写入文件的同时输出到屏幕上，甚是舒服；`sbatch` 虽然有`-o`命令表示输出文件，但使用该命令后不能输出到屏幕上。
+
+`srun`参数众多，如下列出其单字母简称和对应的全称：
+```
+srun 
+-J, --job-name=[job name] 
+-p, --partiton=[node partition]
+--gres=[资源，如 gpu:2 表示申请两块gpu]
+-c，--cpus-per-task=[*]
+-n, ntasks-per-node=[*]
+-t, --time=[run time]
+-q, --qos=[priority level, low/normal/high] 
+-o, --output=[output file]
+[task command]
+```
+以北大未名一号为例，
+```
+srun --job-name=STL-train --gres=gpu:2 --qos low --time 120:00:00 python -u train.py 2>&1 |tee train.log
+```
 查询节点资源：
     
     sinfo
@@ -1195,9 +1305,9 @@ pip是python自带的，而conda是安装anaconda或者miniconda提供的，俗�
 ---
 ### Markdown 空格
 
-**shift+space** 可切换空格大小（全半角之区别？） (之后再按几个空格就有几个空格，若未这样做按多少个空格都之显示一个空格)。
+**shift+space** 可切换空格大小（全半角之区别？） (之后再按几个空格就有几个空格，若未这样做按多少个空格都之显示一个空格)。按两个空格即表示换行。 
 
-按两个空格即表示换行。 
+此法对MarkdownPad 2 编辑器有效，而VSCode无效？
 
 ---
 ### Markdown 代码
@@ -1236,14 +1346,29 @@ code
 ---
 # LaTex
 
-### VSCODE 编译器
+### VSCode 编译器
 `Ctrl + Alt + B ` 一次编译
 `Ctrl + Alt + R` 选择recipe，此时才能显示目录、摘要等。
+`Ctrl + Alt + J` 正向查找，即选中LaTex代码后按此快捷键可定位到PDF中的对应文本。
 
-参考：[LaTeX技巧932：如何配置Visual Studio Code作为LaTeX编辑器[新版更新]](https://www.latexstudio.net/archives/12260.html)
+参考：[使用VSCode编写LaTeX](https://zhuanlan.zhihu.com/p/38178015)
+[LaTeX技巧932：如何配置Visual Studio Code作为LaTeX编辑器[新版更新]](https://www.latexstudio.net/archives/12260.html)
+
+### 一些符号代码
+`\pm` $\pm$
+`\equiv` $\equiv$
+`\approx` $\approx$
+`\leq` $\leq$
+`\leqslant` $\leqslant$
+
+`\raggedright` 两端对齐
 
 ---
 # Others
+### paper writing
+#### 插入图片
+一般插入eps或PDF格式图片，而将jpg、png等格式图片转化为eps格式可借助`bmeps`命令，在安装了Tex后已具有`bmeps`模块。在终端中采取如下命令即可（注意写对图片路径，Windows系统下在指定文件夹中按住Shift键再右键选择‘在此处打开pewershell窗口’即可）：
+`bmeps -c *.png *.eps`
 
 ### server config(~2019.7)
 
