@@ -1184,8 +1184,10 @@ autoindent 在这种缩进形式中，新增加的行和前一行使用相同的
     conda config --set show_channel_urls yes
 	恢复默认源：
 	conda config --remove-key channels
-	显示所有源：
+	显示库源信息：
 	conda config --show channels
+	显示所有config:
+	conda config --show
 
     没有直接重命名，so间接方式：
     conda create --name [newname] --clone [oldname]
@@ -1203,6 +1205,27 @@ autoindent 在这种缩进形式中，新增加的行和前一行使用相同的
 pip是python自带的，而conda是安装anaconda或者miniconda提供的，俗称的蟒蛇软件商给的，conda可以用来安装管理python，pip当然不能管理python，pip是python下的，所以用pip来装python不可能，conda却可以装python。  
 有的人不用conda去管理python环境，他们自己安装自己要的python各个版本，然后通过修改全局变量来实验使用哪个版本。（全局变量就是比如你在某路径中输入python，要使可以运行在其他路径下的python.exe，那么这个python.exe就必须为全局变量。）  
 通过conda安装的工具包比如tensorflow只会出现在conda list中，不会出现在pip list中，倒过来也一样。
+
+---
+**记录一次pytorch指定版本安装过程**：
+安装 pytorch 1.1.0和 torchvision 0.3.0，服务器上cuda版本为10.1。
+
+参考官网推荐方式：
+`conda install pytorch torchvision cuda-toolkit=10.1 -c pytorch`
+先安装pytorch，采用：
+`conda install pytorch=1.1.0 -c pytorch`
+出现的问题是下载pytorch一直显示网络不行，检验是否添加了清华镜像网站作为channel，已经添加了，后来得知得去掉`-c pytorch`，因为这意味着不会从清华镜像网站下载。但笔者采取的方式是找到pytorch库的链接，先手动下载到本地，再利用
+`conda install --use-local [pkg]`
+安装，其中`[pkg]`表示pytorch库的本地绝对路径，笔者放在`~/anaconda3/pkgs/`中。
+
+此时在python环境中测试`import pytorch`，但是报错，信息为`libmkl_intel_lp64.so: cannot open shared object file: No such file or directory`，参考
+[在导入pytorch时libmkl_intel_lp64.so找不到](https://www.cnblogs.com/denny402/p/10848506.html)，
+搜索到`libmkl_intel_lp64.so`对应的的路径后，添加到环境变量`LD_LIBRARY_PATH`中即可解决。
+
+解决了pytorch后，再来处理torchvision，采用`-c pytorch`会遇到同样的网络问题。去掉后即`conda install torchvision=0.3.0`下载源不变，故仍有网络问题。同样先下载到本地再安装，`import torchvision`测试时会显示没有`PIL`库，查询知`PIL`库不支持python3，改为安装`pillow`库即可，即`conda install pillow`。
+另若去掉版本号，即`conda isntall torchvision`则会自动选择当前最新的pytorch=1.3.0和torchvision=0.4.0，不符合笔者要求，故虽省事，还是得放弃。
+
+另值得一提的是虽然官方上笔者装的版本都对应cuda10.0，服务器上是cuda10.1，但用起来也没问题。另NVIDIA官方cuda10.1有三个版本，10.1表 示10.1.105，10.1 update1表示10.1.168，10.1 update2表示10.1.243。
 
 ---
 ### Linux更改默认Python版本
