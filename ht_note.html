@@ -404,10 +404,11 @@ code {
 <li><a href="#torchvision">torchvision</a></li>
 <li><a href="#cv2%E7%9A%84%E5%9D%91">cv2的坑</a></li>
 <li><a href="#%E8%B0%83%E8%8A%82%E5%AD%A6%E4%B9%A0%E7%8E%87">调节学习率</a></li>
-<li><a href="#%E5%8D%95%E8%8A%82%E7%82%B9%E5%A4%9A%E5%8D%A1">单节点多卡</a></li>
+<li><a href="#torchnndataparallel">torch.nn.DataParallel()</a></li>
+<li><a href="#torchnndistributeddataparallel">torch.nn.DistributedDataParallel</a></li>
+<li><a href="#num_worker">num_worker</a></li>
 <li><a href="#multinomial">multinomial</a></li>
 <li><a href="#load_lua-torchfileload">load_lua -&gt; torchfile.load</a></li>
-<li><a href="#num_works">num_works</a></li>
 </ul>
 </li>
 <li><a href="#tensorflow">Tensorflow</a>
@@ -471,7 +472,7 @@ code {
 <li><a href="#linux">Linux</a>
 <ul>
 <li><a href="#bash">bash</a></li>
-<li><a href="#adduser">adduser</a></li>
+<li><a href="#adduser-useradd">adduser useradd</a></li>
 <li><a href="#ls">ls</a></li>
 <li><a href="#%E8%BD%AF%E9%93%BE%E6%8E%A5">软链接</a></li>
 <li><a href="#ssh">ssh</a></li>
@@ -487,6 +488,7 @@ code {
 <li><a href="#%E6%9F%A5%E7%9C%8B%E6%9D%80%E6%AD%BB-%E8%BF%9B%E7%A8%8B">查看/杀死 进程</a></li>
 <li><a href="#ps-ax-grep-python">ps ax | grep python</a></li>
 <li><a href="#dos2unix">dos2unix</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85matlab">安装MATLAB</a></li>
 <li><a href="#windows-%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5-linux">windows 远程连接 linux</a></li>
 <li><a href="#rename">rename</a></li>
 <li><a href="#vim">vim</a></li>
@@ -533,7 +535,8 @@ code {
 <li><a href="#%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87">插入图片</a></li>
 </ul>
 </li>
-<li><a href="#server-config~20197">server config(~2019.7)</a></li>
+<li><a href="#usb%E5%A4%B1%E6%95%88">USB失效</a></li>
+<li><a href="#server-config~202012">server config(~2020.12)</a></li>
 </ul>
 </li>
 </ul>
@@ -626,20 +629,38 @@ for epoch in range(100):
 <p>Prior to PyTorch 1.1.0, the learning rate scheduler was expected to be called before the optimizer’s update; 1.1.0 changed this behavior in a BC-breaking way. If you use the learning rate scheduler (calling scheduler.step()) before the optimizer’s update (calling optimizer.step()), this will skip the first value of the learning rate schedule. If you are unable to reproduce results after upgrading to PyTorch 1.1.0, please check if you are calling scheduler.step() at the wrong time.</p>
 </blockquote>
 <hr>
-<h3 id="%E5%8D%95%E8%8A%82%E7%82%B9%E5%A4%9A%E5%8D%A1">单节点多卡</h3>
-<p><strong>torch.nn.DataParallel()</strong>
-model, optimizer 等均可用DataParallel包裹，即表示用多块GPU训练。（CUDA_VISIBLE_DEVICES=0,1,2 此种方式仍为单卡训练，只是占用多块卡的显存。）</p>
+<h3 id="torchnndataparallel">torch.nn.DataParallel()</h3>
+<p>model, optimizer 等均可用DataParallel包裹，即表示用多块GPU训练。（CUDA_VISIBLE_DEVICES=0,1,2 此种方式仍为单卡训练，只是占用多块卡的显存。）</p>
 <p>以model为例，其一旦被DataParallel包裹之后，其对应的参数state_dict的keys前会多七个字符，即<code>module.</code>。所以在读写checkpoint时需注意，单卡时不能有<code>module.</code>，所以读取一个多卡训练的checkpoint，中间需加入<code>.module</code>，即由<code>model.state_dict()</code> 变为<code>model.module.state_dict()</code>，其实就相当于把读取的参数字典的keys去掉了前七个字符<code>module.</code>。
 当然了，若果存储模型时就选择单卡型，即</p>
 <pre><code>torch.save({'model': model.module.state_dict()}, save_path)
 </code></pre>
 <p>则读取时就不需进行去module的操作。
-同理，读取单卡checkpoint进行多卡训练时，按单卡代码定义好model(注意此时从CPU转到GPU上，即末尾加个<code>.cuda()</code>或<code>.to(devices)</code>，device需定义一下，可为<code>'cuda'</code>),optimizer等，最后加一个</p>
+同理，读取单卡checkpoint进行多卡训练时，按单卡代码定义好model（注意此时从CPU转到GPU上，即末尾加个<code>.cuda()</code>或<code>.to(device)</code>，device需定义一下，可为<code>'cuda'</code>）,optimizer等，最后加一个</p>
 <pre><code>model = torch.nn.DataParallel(model)
 </code></pre>
 <p>即可，此句代码相当于在model的state_dict的keys前加了个<code>module.</code>。</p>
 <p>总结:<code>torch.nn.DataParallel()</code>相当于在checkpoint的state_dict()的keys前加上了<code>module.</code>，意味着对应多卡；单卡的state_dict()则无<code>module</code>，<code>model.module.state_dict()</code>则为去掉了<code>module.</code>的state_dict()。</p>
 <p>参考：<a href="https://blog.csdn.net/kaixinjiuxing666/article/details/85115077">Missing key(s) in state_dict: Unexpected key(s) in state_dict:</a></p>
+<h3 id="torchnndistributeddataparallel">torch.nn.DistributedDataParallel</h3>
+<p>这才是真正的分布式训练，且为官方推荐，即使是在单节点多卡上使用时。简单说明一下分布式的常用参数：</p>
+<pre class="hljs"><code><div>--dist_url 通信地址，rank为0的进程在这个地址对应的机器上运行。可取为127.0.0.1:8888，8888为任意可用端口，在同一节点上若运行了多个分布式程序，端口需不同，否则会报addres不可用的错误；另IP笔者写为实际IP时程序一直卡着不跑，改为127.0.0.1就好了。
+--world_size 进程数量，一般为节点数x每个节点上的GPU数，一个GPU对应一个进程。
+--rank 进程的编号，从0开始。因为多进程的重复输出等现象，建议输出日志、存储模型等时调加一句if语句就可以了，如当前rank为0才输出，if rank == 0: 
+</div></code></pre>
+<p>当用<code>python -m torch.distributed.launch *py</code>训练时，<code>*.py</code>中需要一个args参数为<code>local_rank</code>。</p>
+<p>笔者在单节点多卡上进行分布式训练时，习惯用<code>CUDA_VISIBLE_DEVICES=2,3 python *.py</code>的方式来运行，此时程序会找到编号为2，3的两块GPU，且给它们的rank即为0和1。</p>
+<p>关于ImageNet等的分布式训练，可参考Github代码: <a href="https://github.com/richardkxu/distributed-pytorch">distributed-pytorch</a></p>
+<hr>
+<h3 id="numworker">num_worker</h3>
+<p><code>torch.utils.data.DataLoader</code>常以batch的方式读取数据，其参数<code>num_worker</code>表示所用核数（并行读取），<code>num_worker=0</code>表示只用一个主进程读取。</p>
+<p>在笔者用风格迁移做数据增强的实验中，风格迁移本身需调用一个VGG网络，而分类采用的ResNet50网络。继承了<code>torch.utils.Dataset</code>类，在里面加入了style_transform操作，从而相当于在<code>DataLoader</code>阶段数据就需要放到cuda里。</p>
+<p>采取<code>torch.nn.DataParallel</code>单节点多卡训练时，会报错<code>RuntimeError: CUDA error: initialization error</code>，解决办法一只要把<code>num_worker</code>设为0就解决了；但考虑到<code>num_worker=4</code>等可能会提升速度，笔者还是尝试着去解决，在主函数的<code>if __name__ =='__main__':</code>后加入</p>
+<pre><code>import multiprocessing as mp
+mp.set_start_method('spawn')
+</code></pre>
+<p>便解决了，意为用多进程读取数据。（注意此时这两行代码必须得写在<code>if __name__ =='__main__':</code>后，不然也可能报错。）</p>
+<p>而同样的代码改为<code>torch.nn.DistributedDataParallel</code>版本的分布式单节点多卡训练后，<code>num_worker=0</code>好像也报错了，猜测是分布式本身就是多进程，与只有一个主进程读取数据矛盾。然后改为<code>num_worker=4</code>报了个风格迁移的网络的模型参数weight和输入weight不在一张卡上，稍微修改了下vgg.cuda()和decoder.cuda()在代码中的位置，用了个<code>.to(torch.cuda.current_device())</code>，便解决了，因为分布式下每个进程会使用一块GPU，此时load数据时保证风格迁移网络和数据输入都在这张卡上，就没有问题了。</p>
 <hr>
 <h3 id="multinomial">multinomial</h3>
 <pre><code>torch.multinomial(input, num_samples,replacement=False, out=None) → LongTensor
@@ -651,11 +672,6 @@ model, optimizer 等均可用DataParallel包裹，即表示用多块GPU训练。
 <p>pytorch由0.4版本升级为1.0+版本后，一些函数会发生变化。
 对于训好的老式参数模型，读取函数由<code>load_lua</code>变为<code>torchfile.load</code>。
 在一次实际操作中，记读取的模型为<code>vgg</code>，则其第一层的权重调用方式由<code>vgg.get(0).weight</code> 变为<code>vgg.modules[0].weight</code>。</p>
-<hr>
-<h3 id="numworks">num_works</h3>
-<p><code>torch.utils.data.DataLoader</code>常以batch的方式读取数据，其参数<code>num_works</code>表示所用核数（并行读取）。
-但需注意一次需运行两个神经网络时，且两个神经网络有数据联系时，有一种报错取<code>num_works=0</code>即可解决。
-例如在风格迁移做数据增强的实验中，风格迁移本身需调用一个VGG网络结构，而分类采用的ResNet50。</p>
 <hr>
 <h2 id="tensorflow">Tensorflow</h2>
 <hr>
@@ -671,7 +687,7 @@ code B
 <h3 id="tensorflow-%E4%B9%8B-checkpoint">tensorflow 之 checkpoint</h3>
 <pre><code>tf.train.get_checkpoint_state(checkpoint_dir,latest_filename=None)
 </code></pre>
-<p>该函数返回的是checkpoint文件CheckpointState proto类型的内容，其中有model_checkpoint_path和all_model_checkpoint_paths两个属性。其中model_checkpoint_path保存了最新的tensorflow模型文件的文件名，all_model_checkpoint_paths则有未被删除的所有tensorflow模型文件的文件名</p>
+<p>该函数返回的是checkpoint文件CheckpointState proto类型的内容，其中有model_checkpoint_path和all_model_checkpoint_paths两个属性。其中model_checkpoint_path保存了最新的tensorflow模型文件的文件名，all_model_checkpoint_paths则有未被删除的所有tensorflow模型文件的文件名。</p>
 <p>参考：<a href="https://blog.csdn.net/changeforeve/article/details/80268522">https://blog.csdn.net/changeforeve/article/details/80268522</a></p>
 <hr>
 <h3 id="%E9%80%89%E6%8B%A9gpu">选择GPU</h3>
@@ -694,7 +710,7 @@ code B
 <blockquote></blockquote>
 <ol>
 <li>如果只是想快速了解一下大概，不建议使用<code>tf.nn.conv2d</code>类似的函数，可以使用<code>tf.layers</code>和<code>tf.contrib.layers</code>高级函数。</li>
-<li>当有了一定的基础后，如果想在该领域进行深入学习，建议使用<code>tf.nn.conv2d</code>搭建神经网络，此时会帮助你深入理解网络中参数的具体功能与作用，而且对于loss函数需要进行正则化的时候很便于修改，能很清晰地知道修改的地方。而如果采用<code>tf.layers</code>和<code>tf.contrib.layers</code>高级函数，由于函数内部有正则项，此时，不利于深入理解。而且如果编写者想自定义loss，此时比较困难，如果读者想共享参数时，此时计算loss函数中的正则项时，应该只计算一次，如果采用高级函数可能不清楚到底如何计算的。</li>
+<li>当有了一定的基础后，如果想在该领域进行深入学习，建议使用<code>tf.nn.conv2d</code>搭建神经网络，此时会帮助你深入理解网络中参数的具体功能与作用，而且对于loss函数需要进行正则化的时候很便于修改，能很清晰地知道修改的地方。而如果采用<code>tf.layers</code>和<code>tf.contrib.layers</code>高级函数，由于函数内部有正则项，不利于深入理解。而且如果编写者想自定义loss，此时比较困难，如果读者想共享参数，计算loss函数中的正则项时，应该只计算一次，如果采用高级函数可能不清楚到底如何计算的。</li>
 </ol>
 <hr>
 <h3 id="%E5%8D%B7%E7%A7%AF%E6%8E%A2%E8%AE%A8">卷积探讨</h3>
@@ -710,11 +726,11 @@ code B
 <p>其中参数一看就明白（论torch的可读性），就不赘述了。</p>
 <p><strong>Tensorflow</strong>卷积池化均<strong>向上取整</strong>，简单粗暴。其有'SAME'和'VALID'两种补丁模式：前者超过原图边界处用0填充，当kernel为奇数时，padding可能只补一边；后者确保不超过边界，可能会丢失一些信息。
 要保持图片尺寸不变，看一个特例，即常用stride=1，且kernel为奇数，此时只需 k-2p=1 即可。</p>
-<p><strong>PyTorch</strong>则<strong>向下取整</strong>，。
+<p><strong>PyTorch</strong>则<strong>向下取整</strong>。
 以Resnet经典一层（[1x1, 3x3, 1x1] + [1x1] shortcut）为例，padding为0输出大小为：
 $$m = \lfloor \frac{n-1}{s} + 1 \rfloor $$
-当s=1时，大小不变；当s=2时，若输入n为偶数则m为其一半，为偶数则m相当于对n/2向上取整。</p>
-<p>当padding只补一边时很有意思，caffe补左上，Tensorflow补右下，Pytorch补一圈(仍要保证大小不变时有待探究)。</p>
+当s=1时，大小不变；当s=2时，若输入n为偶数则m为其一半，为奇数则m相当于对n/2向上取整。</p>
+<p>当padding只补一边时很有意思，caffe补左上，Tensorflow补右下，Pytorch补一圈（仍要保证大小不变时有待探究）。</p>
 <hr>
 <h3 id="%E6%84%9F%E5%8F%97%E9%87%8E">感受野</h3>
 <p>$$ RF_n = RF_{n-1} + (kernel_size - 1) * stride $$</p>
@@ -729,7 +745,7 @@ $$ (k - 1) * l + 1 $$</p>
 <p>Bottleneck每个block出去channel 为 planes * expansion, 如 512 * 4 。</p>
 <hr>
 <h3 id="ncwh">(N,C,W,H)</h3>
-<p>tensorflow默认为NHWC，其访存局部性更好；而NCHW为GPU推荐方式。</p>
+<p>tensorflow默认为NHWC，其访存局部性更好；而torch的NCHW为GPU推荐方式。</p>
 <h3 id="%E4%BC%98%E5%8C%96%E5%99%A8">优化器</h3>
 <p>据说SGD比ADAM稳定。</p>
 <h3 id="training-accuracy">training accuracy</h3>
@@ -755,7 +771,7 @@ sorted(a)  a不变  返回 变后结果
 <p><code>zip(*a)</code> 解压</p>
 <hr>
 <h3 id="eval">eval()</h3>
-<p>eval()函数十分强大，官方demo解释为：将字符串str当成有效的表达式来求值并返回计算结果。</p>
+<p><code>eval()</code>函数十分强大，官方demo解释为：将字符串str当成有效的表达式来求值并返回计算结果。<code>exec()</code>功能类似，执行python语句。</p>
 <hr>
 <h3 id="f-string">f-string</h3>
 <pre><code>f&quot;string&quot;
@@ -821,7 +837,7 @@ args = parser.parse_args()
 <p>在主函数中对应判断稍加修改：</p>
 <pre><code>if args.trained == 'False':
 	code1
-else  # elif args.trained == 'True'
+elif args.trained == 'True'
 	code2
 </code></pre>
 <p>解决办法3：(推荐!!!)<br>
@@ -991,7 +1007,7 @@ print(np.rollaxis(a, 1, 2), '\n')
 <h3 id="matplotlib">matplotlib</h3>
 <p>matplotlib在终端中不能显示图（通过ssh等连接Linux服务器）</p>
 <pre><code>import matplotlib as mpl
-mpl.use(‘Agg’)
+mpl.use('Agg')
 import mpl.pyplot as plt
 </code></pre>
 <p>注：前两句必须在第三句前面。</p>
@@ -1074,11 +1090,14 @@ shell开头写</p>
 <pre><code>#!/bin/bash
 </code></pre>
 <hr>
-<h3 id="adduser">adduser</h3>
-<p>增加用户</p>
+<h3 id="adduser-useradd">adduser useradd</h3>
+<p>adduser 较为便捷</p>
+<p>另useradd也可，如</p>
+<pre><code>useradd -d /home/hongt -s /bin/bash -m hongt
+</code></pre>
 <hr>
 <h3 id="ls">ls</h3>
-<p>ls隐藏pyc文件：</p>
+<p>ls隐藏pyc文件，可写在<code>~/.bashrc</code>中：</p>
 <pre><code>alias ls='ls -I*.pyc'
 </code></pre>
 <p>注：第一个<code>ls</code>可任意命名。</p>
@@ -1187,6 +1206,7 @@ zip jpg.zip *.jpg //zip格式的压缩，需要先下载zip for linux
 <code>tar -czvf ht.tar.gz images --exclude=1.png --exclude=images/monkey</code></p>
 <hr>
 <h3 id="scp">scp</h3>
+<p><code>-P</code>指定端口，<code>-v</code>输出日志信息。</p>
 <p>文件数过多等情况下，可能未完全复制，先设置超时时间为无穷大即可。</p>
 <pre><code>set timeout=-1
 </code></pre>
@@ -1198,7 +1218,7 @@ zip jpg.zip *.jpg //zip格式的压缩，需要先下载zip for linux
 <code>Ctrl+S</code>：冻结窗口。注意：这不是保存的命令。当屏幕输出过快时，用户可冻结窗口来查看瞬时的输出。
 <code>Ctrl+Q</code>：取消冻结窗口。</p>
 <h3 id="%E6%9F%A5%E7%9C%8B%E4%BD%8D%E7%BD%AE">查看位置</h3>
-<p>查看安装应用的位置，如Python, ls(package代，下同)等：</p>
+<p>查看安装应用的位置，如Python, ls（package代，下同）等：</p>
 <pre><code>which package
 </code></pre>
 <p>查看Python中安装的库的位置，如numpy,torch等，可通过pip:</p>
@@ -1222,8 +1242,9 @@ zip jpg.zip *.jpg //zip格式的压缩，需要先下载zip for linux
 <hr>
 <h3 id="linux-%E6%9F%A5%E7%9C%8B%E7%A1%AC%E7%9B%98%E5%88%86%E5%8C%BA%E5%86%85%E5%AD%98">Linux 查看硬盘分区内存</h3>
 <pre><code>df -hl
+lsblk
 </code></pre>
-<hr>
+<p><code>lsblk</code>命令用于列出所有可用块设备的信息，而且还能显示他们之间的依赖关系，但是它不会列出RAM盘的信。</p>
 <h3 id="%E6%9F%A5%E7%9C%8B%E6%9D%80%E6%AD%BB-%E8%BF%9B%E7%A8%8B">查看/杀死 进程</h3>
 <p>查看进程：</p>
 <pre><code>ps -ef |grep [process-name]
@@ -1242,6 +1263,13 @@ zip jpg.zip *.jpg //zip格式的压缩，需要先下载zip for linux
 <hr>
 <h3 id="dos2unix">dos2unix</h3>
 <p>因格式原因，有时候文件从windows复制到linux系统后执行会报错，比如代码文件中的回车空格等问题。先执行一句 <code>dos2unix(filename)</code> 即可.</p>
+<hr>
+<h3 id="%E5%AE%89%E8%A3%85matlab">安装MATLAB</h3>
+<p>刚安装好时只能在MATLAB的安装路径内运行，即在<code>……/bin</code>内输入<code>./matlab</code>。要使在终端的任意路径下都可运行MTALAB，在<code>/usr/local/bin</code>里绑定一个软链接即可，即</p>
+<pre class="hljs"><code><div>cd /usr/local/bin
+sudo ln -s ……/bin/matlab matlab
+</div></code></pre>
+<p>此时在终端任意路径下输入<code>matlab</code>都可运行了。</p>
 <hr>
 <h3 id="windows-%E8%BF%9C%E7%A8%8B%E8%BF%9E%E6%8E%A5-linux">windows 远程连接 linux</h3>
 <p><strong>linux</strong>上安装<strong>xrdp</strong></p>
@@ -1517,7 +1545,7 @@ code<br>
 <hr>
 <h3 id="markdown-%E5%85%AC%E5%BC%8F">Markdown 公式</h3>
 <p>在HTML Head编辑器导入相应文件。</p>
-<p>基本与Latex语法一致，但\在Markdown中为转义字符，故行内公式$ A $ 变为 <strong>\\( A \\)</strong>。（A代指公式）
+<p>基本与Latex语法一致，但\在Markdown中为转义字符，故行内公式<code>$ A $</code> 变为 <strong><code>\\( A \\)</code></strong>。（A代指公式）
 用visual studio code编辑则<code>$ $</code> 或 <code>$$ $$</code>即可。</p>
 <p>用VSCODE预览公式时没问题，但导出为pdf，html等时公式仍显示源码。解决办法有二，其一为在文档开头写入：</p>
 <pre class="hljs"><code><div>&lt;script type=&quot;text/javascript&quot; src=&quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;&gt;&lt;/script&gt;
@@ -1551,27 +1579,25 @@ code<br>
 <h4 id="%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87">插入图片</h4>
 <p>一般插入eps或PDF格式图片，而将jpg、png等格式图片转化为eps格式可借助<code>bmeps</code>命令，在安装了Tex后已具有<code>bmeps</code>模块。在终端中采取如下命令即可（注意写对图片路径，Windows系统下在指定文件夹中按住Shift键再右键选择‘在此处打开pewershell窗口’即可）：
 <code>bmeps -c *.png *.eps</code></p>
-<h3 id="server-config20197">server config(~2019.7)</h3>
-<p>anjie：
+<hr>
+<h3 id="usb%E5%A4%B1%E6%95%88">USB失效</h3>
+<p>笔者有一天打开电脑（Windows系统）突然发现所有的USB接口都失效了，导致外接鼠标键盘都失效，插入U盘也读取不了。网上搜了很多教程都不管用，一类方法为电脑在节电模式下会禁用外接USB口等，所以需关闭这些设置，还有卸载USB驱动再重装等（可借助驱动精灵等软件），笔者试了均无果。</p>
+<p>开机进入BIOS模式，在<code>System Configuration</code>里有一栏是<code>USB Configuration</code>，勾选上<code>Enable USB Boot Support</code>和<code>Enable External USB Ports</code>；另在<code>Power Management</code>里有一栏是<code>Enable USB Wake Support</code>，勾选上<code>ON</code>。此时开机后便一切恢复岁月静好了！</p>
+<p>此次USB失效莫名其妙（系统更新的锅？），按照上述方法搞好后，过了两天又失效了，于是又重复搞了一次，后来就再也没有抽风过。</p>
+<p>另很多电脑F1~12键都有另一种对应的功能，如F3除了传统的功能外还可增大音量，默认的是传统功能时要增大音量就得按住<code>fn</code>键再按F3了。在BIOS模式的<code>POST Behavior</code>里有一栏<code>Fn lock</code>的<code>Lock Mode</code>，其有<code>Lock Mode Standard</code>和<code>Lock Mode Secondary</code>，选择一个即可。笔者习惯选择后者，即F3默认为增大音量。</p>
+<hr>
+<h3 id="server-config202012">server config(~2020.12)</h3>
+<p>weiming1：
 python3.6.2
 torch   0.4.0
 torchvision   0.2.1
 cv2   3.1.0</p>
-<p>work:
-Python 3.6.5
-torch   0.4.1
-cv2   3.4.2</p>
 <p>PKU163:
 Python3.5.2
 torch   0.4.1
 torchvision   0.2.1
 cv2   3.3.0
 tensorflow   1.4.0</p>
-<p>asimov:
-python 3.7.3 (base)      py36  python 3.6.8
-torch   0.4.1
-torchvision  0.2.1
-cv2   3.4.2</p>
 
 </body>
 </html>

@@ -18,117 +18,11 @@
 + LaTex
 + Others
 ---
+<!-- code_chunk_output -->
+
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
-<!-- code_chunk_output -->
-
-- [Python](#python)
-	- [Pytorch](#pytorch)
-		- [Tensor](#tensor)
-		- [item()](#item)
-		- [torchvision.transforms](#torchvisiontransforms)
-		- [torchvision.save_image](#torchvisionsaveimage)
-		- [Relu](#relu)
-		- [nn.ConvTranspose2d](#nnconvtranspose2d)
-		- [torchvision](#torchvision)
-		- [cv2的坑](#cv2%e7%9a%84%e5%9d%91)
-		- [调节学习率](#%e8%b0%83%e8%8a%82%e5%ad%a6%e4%b9%a0%e7%8e%87)
-		- [单节点多卡](#%e5%8d%95%e8%8a%82%e7%82%b9%e5%a4%9a%e5%8d%a1)
-		- [multinomial](#multinomial)
-		- [load_lua -> torchfile.load](#loadlua---torchfileload)
-		- [num_works](#numworks)
-	- [Tensorflow](#tensorflow)
-		- [tf.Session()](#tfsession)
-		- [tensorflow 之 checkpoint](#tensorflow-%e4%b9%8b-checkpoint)
-		- [选择GPU](#%e9%80%89%e6%8b%a9gpu)
-		- [tf.nn](#tfnn)
-		- [卷积探讨](#%e5%8d%b7%e7%a7%af%e6%8e%a2%e8%ae%a8)
-		- [感受野](#%e6%84%9f%e5%8f%97%e9%87%8e)
-		- [ResNet](#resnet)
-		- [(N,C,W,H)](#ncwh)
-		- [优化器](#%e4%bc%98%e5%8c%96%e5%99%a8)
-		- [training accuracy](#training-accuracy)
-	- [Python](#python-1)
-		- [np.clip()](#npclip)
-		- [np.random.choice()](#nprandomchoice)
-		- [排序](#%e6%8e%92%e5%ba%8f)
-		- [zip](#zip)
-		- [eval()](#eval)
-		- [f-string](#f-string)
-		- [glob](#glob)
-		- [os.path.dirname(\_\_file\_\_)](#ospathdirnamefile)
-		- [argparse](#argparse)
-			- [bool型argparse 坑](#bool%e5%9e%8bargparse-%e5%9d%91)
-		- [class](#class)
-		- [\_\_call\_\_()](#call)
-		- [\_\_dir\_\_()](#dir)
-		- [Python函数——传对象(call by object)](#python%e5%87%bd%e6%95%b0%e4%bc%a0%e5%af%b9%e8%b1%a1call-by-object)
-		- [globals()](#globals)
-		- [zfill](#zfill)
-		- [ravel() & flatten()](#ravel--flatten)
-		- [np.rollaxis（）](#nprollaxis)
-		- [matplotlib](#matplotlib)
-		- [plt.plot()](#pltplot)
-	- [!Plot_tick](#plottick)
-	- [opencv2](#opencv2)
-		- [resize](#resize)
-- [MATLAB](#matlab)
-		- [MATLAB bsxfun](#matlab-bsxfun)
-	- [Python 与 MATLAB的一些函数区别（细节）](#python-%e4%b8%8e-matlab%e7%9a%84%e4%b8%80%e4%ba%9b%e5%87%bd%e6%95%b0%e5%8c%ba%e5%88%ab%e7%bb%86%e8%8a%82)
-		- [复数域](#%e5%a4%8d%e6%95%b0%e5%9f%9f)
-- [Linux](#linux)
-		- [bash](#bash)
-		- [adduser](#adduser)
-		- [ls](#ls)
-		- [软链接](#%e8%bd%af%e9%93%be%e6%8e%a5)
-		- [ssh](#ssh)
-		- [查看CPU GPU使用情况](#%e6%9f%a5%e7%9c%8bcpu-gpu%e4%bd%bf%e7%94%a8%e6%83%85%e5%86%b5)
-		- [输出机制](#%e8%be%93%e5%87%ba%e6%9c%ba%e5%88%b6)
-		- [export & echo](#export--echo)
-		- [tar](#tar)
-		- [scp](#scp)
-		- [Ctrl类快捷键](#ctrl%e7%b1%bb%e5%bf%ab%e6%8d%b7%e9%94%ae)
-		- [查看位置](#%e6%9f%a5%e7%9c%8b%e4%bd%8d%e7%bd%ae)
-		- [Linux查看文件大小数量](#linux%e6%9f%a5%e7%9c%8b%e6%96%87%e4%bb%b6%e5%a4%a7%e5%b0%8f%e6%95%b0%e9%87%8f)
-		- [Linux 查看硬盘分区内存](#linux-%e6%9f%a5%e7%9c%8b%e7%a1%ac%e7%9b%98%e5%88%86%e5%8c%ba%e5%86%85%e5%ad%98)
-		- [查看/杀死 进程](#%e6%9f%a5%e7%9c%8b%e6%9d%80%e6%ad%bb-%e8%bf%9b%e7%a8%8b)
-		- [ps ax | grep python](#ps-ax--grep-python)
-		- [dos2unix](#dos2unix)
-		- [windows 远程连接 linux](#windows-%e8%bf%9c%e7%a8%8b%e8%bf%9e%e6%8e%a5-linux)
-		- [rename](#rename)
-		- [vim](#vim)
-		- [~/.vimrc](#vimrc)
-		- [我的~/.vimrc](#%e6%88%91%e7%9a%84vimrc)
-		- [vim自动补全](#vim%e8%87%aa%e5%8a%a8%e8%a1%a5%e5%85%a8)
-		- [vim Bundle](#vim-bundle)
-		- [pip](#pip)
-		- [conda](#conda)
-		- [Linux更改默认Python版本](#linux%e6%9b%b4%e6%94%b9%e9%bb%98%e8%ae%a4python%e7%89%88%e6%9c%ac)
-		- [查看网关](#%e6%9f%a5%e7%9c%8b%e7%bd%91%e5%85%b3)
-		- [slurm集群管理](#slurm%e9%9b%86%e7%be%a4%e7%ae%a1%e7%90%86)
-		- [tmux](#tmux)
-		- [$PATH](#path)
-- [Mac](#mac)
-		- [常用快捷键](#%e5%b8%b8%e7%94%a8%e5%bf%ab%e6%8d%b7%e9%94%ae)
-		- [新建文件](#%e6%96%b0%e5%bb%ba%e6%96%87%e4%bb%b6)
-		- [隐藏文件](#%e9%9a%90%e8%97%8f%e6%96%87%e4%bb%b6)
-- [Markdown](#markdown)
-		- [Markdown 超链接](#markdown-%e8%b6%85%e9%93%be%e6%8e%a5)
-		- [Markdown 空格](#markdown-%e7%a9%ba%e6%a0%bc)
-		- [Markdown 代码](#markdown-%e4%bb%a3%e7%a0%81)
-		- [Markdown 公式](#markdown-%e5%85%ac%e5%bc%8f)
-		- [Markdown 图片](#markdown-%e5%9b%be%e7%89%87)
-		- [Markdown 目录](#markdown-%e7%9b%ae%e5%bd%95)
-- [LaTex](#latex)
-		- [VSCode 编译器](#vscode-%e7%bc%96%e8%af%91%e5%99%a8)
-		- [一些符号代码](#%e4%b8%80%e4%ba%9b%e7%ac%a6%e5%8f%b7%e4%bb%a3%e7%a0%81)
-- [Others](#others)
-		- [paper writing](#paper-writing)
-			- [插入图片](#%e6%8f%92%e5%85%a5%e5%9b%be%e7%89%87)
-		- [server config(~2019.7)](#server-config20197)
-
-<!-- /code_chunk_output -->
 
 ---
 
@@ -237,8 +131,7 @@ $H_{out} = (H_{in} - 1)\times stride - 2p + dilation\times (k-1) + output\_paddi
 >Prior to PyTorch 1.1.0, the learning rate scheduler was expected to be called before the optimizer’s update; 1.1.0 changed this behavior in a BC-breaking way. If you use the learning rate scheduler (calling scheduler.step()) before the optimizer’s update (calling optimizer.step()), this will skip the first value of the learning rate schedule. If you are unable to reproduce results after upgrading to PyTorch 1.1.0, please check if you are calling scheduler.step() at the wrong time.
 
 ---
-### 单节点多卡
-**torch.nn.DataParallel()**
+### torch.nn.DataParallel()
 model, optimizer 等均可用DataParallel包裹，即表示用多块GPU训练。（CUDA_VISIBLE_DEVICES=0,1,2 此种方式仍为单卡训练，只是占用多块卡的显存。）
 
 以model为例，其一旦被DataParallel包裹之后，其对应的参数state_dict的keys前会多七个字符，即`module.`。所以在读写checkpoint时需注意，单卡时不能有`module.`，所以读取一个多卡训练的checkpoint，中间需加入`.module`，即由`model.state_dict()` 变为`model.module.state_dict()`，其实就相当于把读取的参数字典的keys去掉了前七个字符`module.`。
@@ -246,7 +139,7 @@ model, optimizer 等均可用DataParallel包裹，即表示用多块GPU训练。
 
     torch.save({'model': model.module.state_dict()}, save_path)
 则读取时就不需进行去module的操作。
-同理，读取单卡checkpoint进行多卡训练时，按单卡代码定义好model(注意此时从CPU转到GPU上，即末尾加个`.cuda()`或`.to(devices)`，device需定义一下，可为`'cuda'`),optimizer等，最后加一个
+同理，读取单卡checkpoint进行多卡训练时，按单卡代码定义好model（注意此时从CPU转到GPU上，即末尾加个`.cuda()`或`.to(device)`，device需定义一下，可为`'cuda'`）,optimizer等，最后加一个
     
     model = torch.nn.DataParallel(model)
 即可，此句代码相当于在model的state_dict的keys前加了个`module.`。
@@ -254,6 +147,35 @@ model, optimizer 等均可用DataParallel包裹，即表示用多块GPU训练。
 总结:`torch.nn.DataParallel()`相当于在checkpoint的state_dict()的keys前加上了`module.`，意味着对应多卡；单卡的state_dict()则无`module`，`model.module.state_dict()`则为去掉了`module.`的state_dict()。
 
 参考：[Missing key(s) in state_dict: Unexpected key(s) in state_dict:](https://blog.csdn.net/kaixinjiuxing666/article/details/85115077)
+
+### torch.nn.DistributedDataParallel
+
+这才是真正的分布式训练，且为官方推荐，即使是在单节点多卡上使用时。简单说明一下分布式的常用参数：
+```
+--dist_url 通信地址，rank为0的进程在这个地址对应的机器上运行。可取为127.0.0.1:8888，8888为任意可用端口，在同一节点上若运行了多个分布式程序，端口需不同，否则会报addres不可用的错误；另IP笔者写为实际IP时程序一直卡着不跑，改为127.0.0.1就好了。
+--world_size 进程数量，一般为节点数x每个节点上的GPU数，一个GPU对应一个进程。
+--rank 进程的编号，从0开始。因为多进程的重复输出等现象，建议输出日志、存储模型等时调加一句if语句就可以了，如当前rank为0才输出，if rank == 0: 
+```
+
+当用`python -m torch.distributed.launch *py`训练时，`*.py`中需要一个args参数为`local_rank`。
+
+笔者在单节点多卡上进行分布式训练时，习惯用`CUDA_VISIBLE_DEVICES=2,3 python *.py`的方式来运行，此时程序会找到编号为2，3的两块GPU，且给它们的rank即为0和1。
+
+关于ImageNet等的分布式训练，可参考Github代码: [distributed-pytorch](https://github.com/richardkxu/distributed-pytorch)
+
+---
+### num_worker
+`torch.utils.data.DataLoader`常以batch的方式读取数据，其参数`num_worker`表示所用核数（并行读取），`num_worker=0`表示只用一个主进程读取。
+
+在笔者用风格迁移做数据增强的实验中，风格迁移本身需调用一个VGG网络，而分类采用的ResNet50网络。继承了`torch.utils.Dataset`类，在里面加入了style_transform操作，从而相当于在`DataLoader`阶段数据就需要放到cuda里。
+
+采取`torch.nn.DataParallel`单节点多卡训练时，会报错`RuntimeError: CUDA error: initialization error`，解决办法一只要把`num_worker`设为0就解决了；但考虑到`num_worker=4`等可能会提升速度，笔者还是尝试着去解决，在主函数的`if __name__ =='__main__':`后加入
+	
+	import multiprocessing as mp
+	mp.set_start_method('spawn')
+便解决了，意为用多进程读取数据。（注意此时这两行代码必须得写在`if __name__ =='__main__':`后，不然也可能报错。）
+
+而同样的代码改为`torch.nn.DistributedDataParallel`版本的分布式单节点多卡训练后，`num_worker=0`好像也报错了，猜测是分布式本身就是多进程，与只有一个主进程读取数据矛盾。然后改为`num_worker=4`报了个风格迁移的网络的模型参数weight和输入weight不在一张卡上，稍微修改了下vgg.cuda()和decoder.cuda()在代码中的位置，用了个`.to(torch.cuda.current_device())`，便解决了，因为分布式下每个进程会使用一块GPU，此时load数据时保证风格迁移网络和数据输入都在这张卡上，就没有问题了。
 
 ---
 ### multinomial
@@ -269,12 +191,6 @@ model, optimizer 等均可用DataParallel包裹，即表示用多块GPU训练。
 pytorch由0.4版本升级为1.0+版本后，一些函数会发生变化。
 对于训好的老式参数模型，读取函数由`load_lua`变为`torchfile.load`。
 在一次实际操作中，记读取的模型为`vgg`，则其第一层的权重调用方式由`vgg.get(0).weight` 变为`vgg.modules[0].weight`。
-
----
-### num_works
-`torch.utils.data.DataLoader`常以batch的方式读取数据，其参数`num_works`表示所用核数（并行读取）。
-但需注意一次需运行两个神经网络时，且两个神经网络有数据联系时，有一种报错取`num_works=0`即可解决。
-例如在风格迁移做数据增强的实验中，风格迁移本身需调用一个VGG网络结构，而分类采用的ResNet50。
 
 ---
 ## Tensorflow
@@ -297,7 +213,7 @@ tensorflow由Session.run()或eval()返回的任何张量都是numpy数组类型�
 
     tf.train.get_checkpoint_state(checkpoint_dir,latest_filename=None)
 
-该函数返回的是checkpoint文件CheckpointState proto类型的内容，其中有model\_checkpoint\_path和all\_model\_checkpoint\_paths两个属性。其中model\_checkpoint\_path保存了最新的tensorflow模型文件的文件名，all\_model\_checkpoint\_paths则有未被删除的所有tensorflow模型文件的文件名
+该函数返回的是checkpoint文件CheckpointState proto类型的内容，其中有model\_checkpoint\_path和all\_model\_checkpoint\_paths两个属性。其中model\_checkpoint\_path保存了最新的tensorflow模型文件的文件名，all\_model\_checkpoint\_paths则有未被删除的所有tensorflow模型文件的文件名。
 
 参考：[https://blog.csdn.net/changeforeve/article/details/80268522](https://blog.csdn.net/changeforeve/article/details/80268522)
 
@@ -317,7 +233,7 @@ tensorflow由Session.run()或eval()返回的任何张量都是numpy数组类型�
 ### tf.nn
 >
 1) 如果只是想快速了解一下大概，不建议使用`tf.nn.conv2d`类似的函数，可以使用`tf.layers`和`tf.contrib.layers`高级函数。  
-2) 当有了一定的基础后，如果想在该领域进行深入学习，建议使用`tf.nn.conv2d`搭建神经网络，此时会帮助你深入理解网络中参数的具体功能与作用，而且对于loss函数需要进行正则化的时候很便于修改，能很清晰地知道修改的地方。而如果采用`tf.layers`和`tf.contrib.layers`高级函数，由于函数内部有正则项，此时，不利于深入理解。而且如果编写者想自定义loss，此时比较困难，如果读者想共享参数时，此时计算loss函数中的正则项时，应该只计算一次，如果采用高级函数可能不清楚到底如何计算的。
+2) 当有了一定的基础后，如果想在该领域进行深入学习，建议使用`tf.nn.conv2d`搭建神经网络，此时会帮助你深入理解网络中参数的具体功能与作用，而且对于loss函数需要进行正则化的时候很便于修改，能很清晰地知道修改的地方。而如果采用`tf.layers`和`tf.contrib.layers`高级函数，由于函数内部有正则项，不利于深入理解。而且如果编写者想自定义loss，此时比较困难，如果读者想共享参数，计算loss函数中的正则项时，应该只计算一次，如果采用高级函数可能不清楚到底如何计算的。
 
 ---
 ### 卷积探讨
@@ -340,12 +256,12 @@ $$ m = \frac{n + 2*p - k}{s} + 1 $$
 **Tensorflow**卷积池化均**向上取整**，简单粗暴。其有'SAME'和'VALID'两种补丁模式：前者超过原图边界处用0填充，当kernel为奇数时，padding可能只补一边；后者确保不超过边界，可能会丢失一些信息。
 要保持图片尺寸不变，看一个特例，即常用stride=1，且kernel为奇数，此时只需 k-2p=1 即可。
 
-**PyTorch**则**向下取整**，。
+**PyTorch**则**向下取整**。
 以Resnet经典一层（[1x1, 3x3, 1x1] + [1x1] shortcut）为例，padding为0输出大小为：
 $$m = \lfloor \frac{n-1}{s} + 1 \rfloor $$
-当s=1时，大小不变；当s=2时，若输入n为偶数则m为其一半，为偶数则m相当于对n/2向上取整。
+当s=1时，大小不变；当s=2时，若输入n为偶数则m为其一半，为奇数则m相当于对n/2向上取整。
 
-当padding只补一边时很有意思，caffe补左上，Tensorflow补右下，Pytorch补一圈(仍要保证大小不变时有待探究)。
+当padding只补一边时很有意思，caffe补左上，Tensorflow补右下，Pytorch补一圈（仍要保证大小不变时有待探究）。
 
 ---
 ### 感受野
@@ -366,7 +282,7 @@ Bottleneck每个block出去channel 为 planes * expansion, 如 512 * 4 。
 ---
 ### (N,C,W,H)
 
-tensorflow默认为NHWC，其访存局部性更好；而NCHW为GPU推荐方式。
+tensorflow默认为NHWC，其访存局部性更好；而torch的NCHW为GPU推荐方式。
 
 ### 优化器
 据说SGD比ADAM稳定。
@@ -405,7 +321,7 @@ python3中 `zip()` 返回iterator，没有`.sort()`属性, 可`list(zip())`再�
 
 ---
 ### eval()
-eval()函数十分强大，官方demo解释为：将字符串str当成有效的表达式来求值并返回计算结果。
+`eval()`函数十分强大，官方demo解释为：将字符串str当成有效的表达式来求值并返回计算结果。`exec()`功能类似，执行python语句。
 
 ---
 
@@ -488,7 +404,7 @@ eval()函数十分强大，官方demo解释为：将字符串str当成有效的�
 	
 	if args.trained == 'False':
 		code1
-	else  # elif args.trained == 'True'
+	elif args.trained == 'True'
 		code2
 
 解决办法3：(推荐!!!)  
@@ -673,7 +589,7 @@ a是一个数组，将第n2个维度移到n1维度前。
 matplotlib在终端中不能显示图（通过ssh等连接Linux服务器）
 
 	import matplotlib as mpl
-	mpl.use(‘Agg’)
+	mpl.use('Agg')
 	import mpl.pyplot as plt
 
 注：前两句必须在第三句前面。
@@ -773,6 +689,7 @@ Python中则**A.T**表示A的转置，`A.conjugate()`或者`np.conjugate(A)`表�
 
 另python中有个`np.vdot()`函数，np.vdot(a, b)中两个形参都必须为向量（1xn,nx1矩阵也可），但a、b不管是行还是列向量表示都不影响。np.vdot(a, b)表示a先取共轭再与b做内积（即点乘求和），故返回值为一个数值。（而np.dot(a, b)时，若a为1xn，b为nx1，返回值为1x1矩阵，即\[\[ value ]]。）
 
+
 ---
 # Linux
 
@@ -783,15 +700,19 @@ shell开头写
     #!/bin/bash
 
 ---
-### adduser
+### adduser useradd
 
-增加用户
+adduser 较为便捷
+
+另useradd也可，如
+
+	useradd -d /home/hongt -s /bin/bash -m hongt
 
 ---
 
 ### ls
 
-ls隐藏pyc文件：
+ls隐藏pyc文件，可写在`~/.bashrc`中：
 
 	alias ls='ls -I*.pyc'
 
@@ -925,6 +846,8 @@ case3:
 ---
 ### scp
 
+`-P`指定端口，`-v`输出日志信息。
+
 文件数过多等情况下，可能未完全复制，先设置超时时间为无穷大即可。
 
     set timeout=-1
@@ -941,7 +864,7 @@ But failed!
 
 ### 查看位置
 
-查看安装应用的位置，如Python, ls(package代，下同)等：
+查看安装应用的位置，如Python, ls（package代，下同）等：
 
 	which package
 
@@ -972,8 +895,9 @@ But failed!
 ---
 ### Linux 查看硬盘分区内存
     df -hl
-
----
+	lsblk
+	
+`lsblk`命令用于列出所有可用块设备的信息，而且还能显示他们之间的依赖关系，但是它不会列出RAM盘的信。
 ### 查看/杀死 进程
 
 查看进程： 
@@ -998,6 +922,15 @@ But failed!
 ---
 ### dos2unix
 因格式原因，有时候文件从windows复制到linux系统后执行会报错，比如代码文件中的回车空格等问题。先执行一句 `dos2unix(filename)` 即可.
+
+---
+### 安装MATLAB
+刚安装好时只能在MATLAB的安装路径内运行，即在`……/bin`内输入`./matlab`。要使在终端的任意路径下都可运行MTALAB，在`/usr/local/bin`里绑定一个软链接即可，即
+```
+cd /usr/local/bin
+sudo ln -s ……/bin/matlab matlab
+```
+此时在终端任意路径下输入`matlab`都可运行了。
 
 ---
 ### windows 远程连接 linux
@@ -1347,7 +1280,7 @@ code
 
 在HTML Head编辑器导入相应文件。
 
-基本与Latex语法一致，但\\在Markdown中为转义字符，故行内公式$ A $ 变为 **\\\\( A \\\\)**。（A代指公式）
+基本与Latex语法一致，但\\在Markdown中为转义字符，故行内公式`$ A $` 变为 **`\\( A \\)`**。（A代指公式）
 用visual studio code编辑则`$ $` 或 `$$ $$`即可。
 
 用VSCODE预览公式时没问题，但导出为pdf，html等时公式仍显示源码。解决办法有二，其一为在文档开头写入：
@@ -1393,18 +1326,25 @@ code
 一般插入eps或PDF格式图片，而将jpg、png等格式图片转化为eps格式可借助`bmeps`命令，在安装了Tex后已具有`bmeps`模块。在终端中采取如下命令即可（注意写对图片路径，Windows系统下在指定文件夹中按住Shift键再右键选择‘在此处打开pewershell窗口’即可）：
 `bmeps -c *.png *.eps`
 
-### server config(~2019.7)
+---
+### USB失效
 
-anjie：
+笔者有一天打开电脑（Windows系统）突然发现所有的USB接口都失效了，导致外接鼠标键盘都失效，插入U盘也读取不了。网上搜了很多教程都不管用，一类方法为电脑在节电模式下会禁用外接USB口等，所以需关闭这些设置，还有卸载USB驱动再重装等（可借助驱动精灵等软件），笔者试了均无果。
+
+开机进入BIOS模式，在`System Configuration`里有一栏是`USB Configuration`，勾选上`Enable USB Boot Support`和`Enable External USB Ports`；另在`Power Management`里有一栏是`Enable USB Wake Support`，勾选上`ON`。此时开机后便一切恢复岁月静好了！
+
+此次USB失效莫名其妙（系统更新的锅？），按照上述方法搞好后，过了两天又失效了，于是又重复搞了一次，后来就再也没有抽风过。
+
+另很多电脑F1~12键都有另一种对应的功能，如F3除了传统的功能外还可增大音量，默认的是传统功能时要增大音量就得按住`fn`键再按F3了。在BIOS模式的`POST Behavior`里有一栏`Fn lock`的`Lock Mode`，其有`Lock Mode Standard`和`Lock Mode Secondary`，选择一个即可。笔者习惯选择后者，即F3默认为增大音量。
+
+---
+### server config(~2020.12)
+
+weiming1：
 python3.6.2
 torch   0.4.0
 torchvision   0.2.1
 cv2   3.1.0
-
-work:
-Python 3.6.5
-torch   0.4.1
-cv2   3.4.2
 
 PKU163:
 Python3.5.2
@@ -1413,8 +1353,3 @@ torchvision   0.2.1
 cv2   3.3.0
 tensorflow   1.4.0
 
-asimov:
-python 3.7.3 (base)      py36  python 3.6.8
-torch   0.4.1
-torchvision  0.2.1
-cv2   3.4.2
