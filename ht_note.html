@@ -717,20 +717,20 @@ str(b.device)  # 'cuda:0'
 summary(net, (3, 32, 32), device='gpu')
 </code></pre>
 <hr>
-<p>### cProfile</p>
+<h3 id="cprofile">cProfile</h3>
 <p>借助cProfile库观测代码各部分消耗时间。
 如下第一行所示，在原有python运行脚本汇总加入 -m 和 -o 参数即可，其中 -o 表示输出文件名。之后在对自定义命名的 time.profile 运行第二行即可，<code>p.sort_stats('time').print_stats(50)</code> 表示按运行时间降序，只显示前五十项。</p>
-<pre class="hljs"><code><div>python -m cProfile -o time.profile tmp.py
+<pre><code>python -m cProfile -o time.profile tmp.py
 python -c &quot;import pstats; p=stats.Stats('time.profile'); p.sort_stats('time').print_stats(50)&quot; &gt; time.print
-</div></code></pre>
+</code></pre>
 <hr>
 <p>### 多进程之间共享全局变量</p>
 <p>在做ISBI数据集的实验时，valid时会开个子进程来调用路径为script_path的java脚本，其会计算指标值。而想在主进程中获取指标值时，便可借助subprocess库了。</p>
 <pre class="hljs"><code><div>import subprocess
 # subprocess.call([Fiji_path, script_path, original_label, proposal_label, tmp_file])  # 不需要子进程返回信息时运行此行即可
-return_info = subprocess.Popen([Fiji_path, script_path, original_label, proposal_label, tmp_file], shell=False, stdout=subprocess.PIPE)
+return_info = subprocess.Popen([Fiji_path, script_path, original_label, proposal_label, tmp_file], shell=False, stdout=subprocess.PIPE)
 while return_info.poll() is None: 
-    line = return_info.stdout.readline() 
+	line = return_info.stdout.readline() 
     line = line.strip().decode('utf-8')
     ...
 </div></code></pre>
@@ -1303,11 +1303,13 @@ zip jpg.zip *.jpg //zip格式的压缩，需要先下载zip for linux
 </code></pre>
 <p>But failed!</p>
 <p>建议先打包(压缩)再复制。</p>
+<hr>
 <h3 id="ctrl%E7%B1%BB%E5%BF%AB%E6%8D%B7%E9%94%AE">Ctrl类快捷键</h3>
 <p><code>Ctrl+A</code>: 光标移到行首。
 <code>Ctrl+E</code>: 光标移到行尾。
 <code>Ctrl+S</code>：冻结窗口。注意：这不是保存的命令。当屏幕输出过快时，用户可冻结窗口来查看瞬时的输出。
 <code>Ctrl+Q</code>：取消冻结窗口。</p>
+<hr>
 <h3 id="%E6%9F%A5%E7%9C%8B%E4%BD%8D%E7%BD%AE">查看位置</h3>
 <p>查看安装应用的位置，如Python, ls（package代，下同）等：</p>
 <pre><code>which package

@@ -43,6 +43,7 @@
 		- [load_lua -> torchfile.load](#load_lua---torchfileload)
 		- [hook](#hook)
 		- [torchsummary](#torchsummary)
+		- [cProfile](#cprofile)
 	- [Tensorflow](#tensorflow)
 		- [tf.Session()](#tfsession)
 		- [tensorflow 之 checkpoint](#tensorflow-之-checkpoint)
@@ -148,7 +149,6 @@
 		- [server config(~2020.12)](#server-config202012)
 
 <!-- /code_chunk_output -->
-
 
 
 
@@ -360,28 +360,31 @@ pytorch由0.4版本升级为1.0+版本后，一些函数会发生变化。
 	summary(net, (3, 32, 32), device='gpu')
 
 ---
-### cProfile
+
+### cProfile
 
 借助cProfile库观测代码各部分消耗时间。
 如下第一行所示，在原有python运行脚本汇总加入 -m 和 -o 参数即可，其中 -o 表示输出文件名。之后在对自定义命名的 time.profile 运行第二行即可，`p.sort_stats('time').print_stats(50)` 表示按运行时间降序，只显示前五十项。
-```
-python -m cProfile -o time.profile tmp.py
-python -c "import pstats; p=stats.Stats('time.profile'); p.sort_stats('time').print_stats(50)" > time.print
-```
+
+	python -m cProfile -o time.profile tmp.py
+	python -c "import pstats; p=stats.Stats('time.profile'); p.sort_stats('time').print_stats(50)" > time.print
 
 ---
+
 ### 多进程之间共享全局变量
 
 在做ISBI数据集的实验时，valid时会开个子进程来调用路径为script_path的java脚本，其会计算指标值。而想在主进程中获取指标值时，便可借助subprocess库了。
+
 ```
 import subprocess
 # subprocess.call([Fiji_path, script_path, original_label, proposal_label, tmp_file])  # 不需要子进程返回信息时运行此行即可
-return_info = subprocess.Popen([Fiji_path, script_path, original_label, proposal_label, tmp_file], shell=False, stdout=subprocess.PIPE)
+return_info = subprocess.Popen([Fiji_path, script_path, original_label, proposal_label, tmp_file], shell=False, stdout=subprocess.PIPE)
 while return_info.poll() is None: 
-    line = return_info.stdout.readline() 
+	line = return_info.stdout.readline() 
     line = line.strip().decode('utf-8')
     ...
 ```
+
 当然了，如果使用子进程只是为了获取一个值的话有些大材小用。比如在此实验的java脚本中把指标值保存在一个文件里，然后python代码里再读取该文件即可。
 
 此外查到有一个python多进程共享变量Value：
@@ -1111,6 +1114,7 @@ But failed!
 
 建议先打包(压缩)再复制。
 
+---
 ### Ctrl类快捷键
 
 `Ctrl+A`: 光标移到行首。
@@ -1118,6 +1122,7 @@ But failed!
 `Ctrl+S`：冻结窗口。注意：这不是保存的命令。当屏幕输出过快时，用户可冻结窗口来查看瞬时的输出。
 `Ctrl+Q`：取消冻结窗口。
 
+---
 ### 查看位置
 
 查看安装应用的位置，如Python, ls（package代，下同）等：
