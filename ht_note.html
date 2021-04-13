@@ -382,6 +382,7 @@ code {
 </li>
 <li>MATLAB</li>
 <li>Linux</li>
+<li>Git</li>
 <li>Mac</li>
 <li>Markdown</li>
 <li>LaTex</li>
@@ -406,9 +407,14 @@ code {
 <li><a href="#%E8%B0%83%E8%8A%82%E5%AD%A6%E4%B9%A0%E7%8E%87">调节学习率</a></li>
 <li><a href="#torchnndataparallel">torch.nn.DataParallel()</a></li>
 <li><a href="#torchnndistributeddataparallel">torch.nn.DistributedDataParallel</a></li>
-<li><a href="#num_worker">num_worker</a></li>
+<li><a href="#num_workers">num_workers</a></li>
+<li><a href="#device">device</a></li>
 <li><a href="#multinomial">multinomial</a></li>
 <li><a href="#load_lua-torchfileload">load_lua -&gt; torchfile.load</a></li>
+<li><a href="#hook">hook</a></li>
+<li><a href="#torchsummary">torchsummary</a></li>
+<li><a href="#cprofile">cProfile</a></li>
+<li><a href="#%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B9%8B%E9%97%B4%E5%85%B1%E4%BA%AB%E5%85%A8%E5%B1%80%E5%8F%98%E9%87%8F">多进程之间共享全局变量</a></li>
 </ul>
 </li>
 <li><a href="#tensorflow">Tensorflow</a>
@@ -427,6 +433,7 @@ code {
 </li>
 <li><a href="#python-1">Python</a>
 <ul>
+<li><a href="#print">print</a></li>
 <li><a href="#npclip">np.clip()</a></li>
 <li><a href="#nprandomchoice">np.random.choice()</a></li>
 <li><a href="#%E6%8E%92%E5%BA%8F">排序</a></li>
@@ -473,6 +480,8 @@ code {
 <ul>
 <li><a href="#bash">bash</a></li>
 <li><a href="#adduser-useradd">adduser useradd</a></li>
+<li><a href="#sudo">sudo</a></li>
+<li><a href="#chown">chown</a></li>
 <li><a href="#ls">ls</a></li>
 <li><a href="#%E8%BD%AF%E9%93%BE%E6%8E%A5">软链接</a></li>
 <li><a href="#ssh">ssh</a></li>
@@ -485,6 +494,7 @@ code {
 <li><a href="#%E6%9F%A5%E7%9C%8B%E4%BD%8D%E7%BD%AE">查看位置</a></li>
 <li><a href="#linux%E6%9F%A5%E7%9C%8B%E6%96%87%E4%BB%B6%E5%A4%A7%E5%B0%8F%E6%95%B0%E9%87%8F">Linux查看文件大小数量</a></li>
 <li><a href="#linux-%E6%9F%A5%E7%9C%8B%E7%A1%AC%E7%9B%98%E5%88%86%E5%8C%BA%E5%86%85%E5%AD%98">Linux 查看硬盘分区内存</a></li>
+<li><a href="#mkdir">mkdir</a></li>
 <li><a href="#%E6%9F%A5%E7%9C%8B%E6%9D%80%E6%AD%BB-%E8%BF%9B%E7%A8%8B">查看/杀死 进程</a></li>
 <li><a href="#ps-ax-grep-python">ps ax | grep python</a></li>
 <li><a href="#dos2unix">dos2unix</a></li>
@@ -503,6 +513,17 @@ code {
 <li><a href="#slurm%E9%9B%86%E7%BE%A4%E7%AE%A1%E7%90%86">slurm集群管理</a></li>
 <li><a href="#tmux">tmux</a></li>
 <li><a href="#path">$PATH</a></li>
+<li><a href="#cuda%E9%85%8D%E7%BD%AE">CUDA配置</a></li>
+</ul>
+</li>
+<li><a href="#git">Git</a>
+<ul>
+<li><a href="#push">push</a></li>
+<li><a href="#clone">clone</a></li>
+<li><a href="#pull">pull</a></li>
+<li><a href="#diff">diff</a></li>
+<li><a href="#gitignore">.gitignore</a></li>
+<li><a href="#commit">commit</a></li>
 </ul>
 </li>
 <li><a href="#mac">Mac</a>
@@ -535,6 +556,7 @@ code {
 <li><a href="#%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87">插入图片</a></li>
 </ul>
 </li>
+<li><a href="#cmd-%E8%84%9A%E6%9C%AC">cmd 脚本</a></li>
 <li><a href="#usb%E5%A4%B1%E6%95%88">USB失效</a></li>
 <li><a href="#server-config~202012">server config(~2020.12)</a></li>
 </ul>
@@ -650,17 +672,30 @@ for epoch in range(100):
 </div></code></pre>
 <p>当用<code>python -m torch.distributed.launch *py</code>训练时，<code>*.py</code>中需要一个args参数为<code>local_rank</code>。</p>
 <p>笔者在单节点多卡上进行分布式训练时，习惯用<code>CUDA_VISIBLE_DEVICES=2,3 python *.py</code>的方式来运行，此时程序会找到编号为2，3的两块GPU，且给它们的rank即为0和1。</p>
+<p>在argparse里有一个<code>local_rank</code>参数：</p>
+<pre class="hljs"><code><div>parser.add_argument(&quot;--local_rank&quot;, type=int, default=-1, help=&quot;number of cpu threads to use during batch generation&quot;)
+</div></code></pre>
+<p>通过<code>torch.distributed.launch</code>来启动训练，<code>torch.distributed.launch</code> 会给模型分配一个args.local_rank的参数，所以在训练代码中要解析这个参数，也可以通过<code>torch.distributed.get_rank()</code>获取进程id。</p>
 <p>关于ImageNet等的分布式训练，可参考Github代码: <a href="https://github.com/richardkxu/distributed-pytorch">distributed-pytorch</a></p>
 <hr>
-<h3 id="numworker">num_worker</h3>
-<p><code>torch.utils.data.DataLoader</code>常以batch的方式读取数据，其参数<code>num_worker</code>表示所用核数（并行读取），<code>num_worker=0</code>表示只用一个主进程读取。</p>
+<h3 id="numworkers">num_workers</h3>
+<p><code>torch.utils.data.DataLoader</code>常以batch的方式读取数据，其参数<code>num_workers</code>表示所用核数（并行读取），<code>num_workers=0</code>表示只用一个主进程读取。</p>
 <p>在笔者用风格迁移做数据增强的实验中，风格迁移本身需调用一个VGG网络，而分类采用的ResNet50网络。继承了<code>torch.utils.Dataset</code>类，在里面加入了style_transform操作，从而相当于在<code>DataLoader</code>阶段数据就需要放到cuda里。</p>
-<p>采取<code>torch.nn.DataParallel</code>单节点多卡训练时，会报错<code>RuntimeError: CUDA error: initialization error</code>，解决办法一只要把<code>num_worker</code>设为0就解决了；但考虑到<code>num_worker=4</code>等可能会提升速度，笔者还是尝试着去解决，在主函数的<code>if __name__ =='__main__':</code>后加入</p>
+<p>采取<code>torch.nn.DataParallel</code>单节点多卡训练时，会报错<code>RuntimeError: CUDA error: initialization error</code>，解决办法一只要把<code>num_workers</code>设为0就解决了；但考虑到<code>num_workers=4</code>等可能会提升速度，笔者还是尝试着去解决，在主函数的<code>if __name__ =='__main__':</code>后加入</p>
 <pre><code>import multiprocessing as mp
 mp.set_start_method('spawn')
 </code></pre>
 <p>便解决了，意为用多进程读取数据。（注意此时这两行代码必须得写在<code>if __name__ =='__main__':</code>后，不然也可能报错。）</p>
-<p>而同样的代码改为<code>torch.nn.DistributedDataParallel</code>版本的分布式单节点多卡训练后，<code>num_worker=0</code>好像也报错了，猜测是分布式本身就是多进程，与只有一个主进程读取数据矛盾。然后改为<code>num_worker=4</code>报了个风格迁移的网络的模型参数weight和输入weight不在一张卡上，稍微修改了下vgg.cuda()和decoder.cuda()在代码中的位置，用了个<code>.to(torch.cuda.current_device())</code>，便解决了，因为分布式下每个进程会使用一块GPU，此时load数据时保证风格迁移网络和数据输入都在这张卡上，就没有问题了。</p>
+<p>而同样的代码改为<code>torch.nn.DistributedDataParallel</code>版本的分布式单节点多卡训练后，<code>num_workers=0</code>好像也报错了，猜测是分布式本身就是多进程，与只有一个主进程读取数据矛盾。然后改为<code>num_workers=4</code>报了个风格迁移的网络的模型参数weight和输入weight不在一张卡上，稍微修改了下vgg.cuda()和decoder.cuda()在代码中的位置，用了个<code>.to(torch.cuda.current_device())</code>，便解决了，因为分布式下每个进程会使用一块GPU，此时load数据时保证风格迁移网络和数据输入都在这张卡上，就没有问题了。</p>
+<hr>
+<h3 id="device">device</h3>
+<p><code>torch.cuda.current_device()</code>返回的是一个整数，如0 1，而获取某张量当前的device，用str()包裹后即为'cuda:0'的形式。</p>
+<pre class="hljs"><code><div>a = torch.tensor([2, 3])
+device = torch.cuda.current_device()  # 0 int
+b = a.to(device)  # a: tensor([2, 3])  b: tensor([2, 3], device='cuda:0') 
+b.device  # device(type='cuda', index=0)
+str(b.device)  # 'cuda:0'
+</div></code></pre>
 <hr>
 <h3 id="multinomial">multinomial</h3>
 <pre><code>torch.multinomial(input, num_samples,replacement=False, out=None) → LongTensor
@@ -672,6 +707,40 @@ mp.set_start_method('spawn')
 <p>pytorch由0.4版本升级为1.0+版本后，一些函数会发生变化。
 对于训好的老式参数模型，读取函数由<code>load_lua</code>变为<code>torchfile.load</code>。
 在一次实际操作中，记读取的模型为<code>vgg</code>，则其第一层的权重调用方式由<code>vgg.get(0).weight</code> 变为<code>vgg.modules[0].weight</code>。</p>
+<hr>
+<h3 id="hook">hook</h3>
+<p>获取中间层feature map时经常利用hook函数，如<code>register_forward_hook(fn)</code>，而其参数<code>fn</code>为一函数，定义形式为<code>fn(module, input, output)</code>，其中的 input 和 output 均为 tuple 型，里面元素为 Tensor。</p>
+<hr>
+<h3 id="torchsummary">torchsummary</h3>
+<p>可借助<code>torchsummary</code>库查看网络结构，包括各层feature map的大小维度。</p>
+<pre><code>from torchsummary import summary 
+summary(net, (3, 32, 32), device='gpu')
+</code></pre>
+<hr>
+<p>### cProfile</p>
+<p>借助cProfile库观测代码各部分消耗时间。
+如下第一行所示，在原有python运行脚本汇总加入 -m 和 -o 参数即可，其中 -o 表示输出文件名。之后在对自定义命名的 time.profile 运行第二行即可，<code>p.sort_stats('time').print_stats(50)</code> 表示按运行时间降序，只显示前五十项。</p>
+<pre class="hljs"><code><div>python -m cProfile -o time.profile tmp.py
+python -c &quot;import pstats; p=stats.Stats('time.profile'); p.sort_stats('time').print_stats(50)&quot; &gt; time.print
+</div></code></pre>
+<hr>
+<p>### 多进程之间共享全局变量</p>
+<p>在做ISBI数据集的实验时，valid时会开个子进程来调用路径为script_path的java脚本，其会计算指标值。而想在主进程中获取指标值时，便可借助subprocess库了。</p>
+<pre class="hljs"><code><div>import subprocess
+# subprocess.call([Fiji_path, script_path, original_label, proposal_label, tmp_file])  # 不需要子进程返回信息时运行此行即可
+return_info = subprocess.Popen([Fiji_path, script_path, original_label, proposal_label, tmp_file], shell=False, stdout=subprocess.PIPE)
+while return_info.poll() is None: 
+    line = return_info.stdout.readline() 
+    line = line.strip().decode('utf-8')
+    ...
+</div></code></pre>
+<p>当然了，如果使用子进程只是为了获取一个值的话有些大材小用。比如在此实验的java脚本中把指标值保存在一个文件里，然后python代码里再读取该文件即可。</p>
+<p>此外查到有一个python多进程共享变量Value：</p>
+<pre class="hljs"><code><div>multiprocessing.Value(typecode_or_type, *args[, lock])
+</div></code></pre>
+<p>比如<code>Value(&quot;i&quot;, 0)</code>，i表示整型，两个字节。&quot;d&quot; 表示float?
+再比如<code>import ctypes; Value(ctypes.c_float, 1.0)</code>。</p>
+<p>参考：<a href="https://blog.csdn.net/qq_36653505/article/details/85254909">Python中多进程间通信（multiprocessing.Manager)</a></p>
 <hr>
 <h2 id="tensorflow">Tensorflow</h2>
 <hr>
@@ -707,11 +776,12 @@ code B
 </ol>
 <hr>
 <h3 id="tfnn">tf.nn</h3>
-<blockquote></blockquote>
+<blockquote>
 <ol>
 <li>如果只是想快速了解一下大概，不建议使用<code>tf.nn.conv2d</code>类似的函数，可以使用<code>tf.layers</code>和<code>tf.contrib.layers</code>高级函数。</li>
 <li>当有了一定的基础后，如果想在该领域进行深入学习，建议使用<code>tf.nn.conv2d</code>搭建神经网络，此时会帮助你深入理解网络中参数的具体功能与作用，而且对于loss函数需要进行正则化的时候很便于修改，能很清晰地知道修改的地方。而如果采用<code>tf.layers</code>和<code>tf.contrib.layers</code>高级函数，由于函数内部有正则项，不利于深入理解。而且如果编写者想自定义loss，此时比较困难，如果读者想共享参数，计算loss函数中的正则项时，应该只计算一次，如果采用高级函数可能不清楚到底如何计算的。</li>
 </ol>
+</blockquote>
 <hr>
 <h3 id="%E5%8D%B7%E7%A7%AF%E6%8E%A2%E8%AE%A8">卷积探讨</h3>
 <p>输出大小m与输入大小n的关系，其中p表示补丁padding大小，k表示卷积核kernel大小，s表示滑动步长stride：</p>
@@ -752,6 +822,10 @@ $$ (k - 1) * l + 1 $$</p>
 <p>某些情况下全体数据集上的training accuracy显示为100%时不一定为100%，如在采用BatchNormalization模块时，$\mu$和$\sigma$随着batch变化而变化，而训练集上的准确度是以batch为单位来测量的。</p>
 <hr>
 <h2 id="python">Python</h2>
+<hr>
+<h3 id="print">print</h3>
+<p>不换行输出，<code>\r</code>表示会回到行头：
+<code>print(*, end='\r')</code></p>
 <hr>
 <h3 id="npclip">np.clip()</h3>
 <p>上下界截取。</p>
@@ -1037,7 +1111,8 @@ plt.ylim(57.5, 76.5)
 <h2 id="opencv2">opencv2</h2>
 <hr>
 <h3 id="resize">resize</h3>
-<p>先宽再高！</p>
+<p>先宽再高！
+resize 为原来的 width 和 height 也还是有一点时间消耗的。</p>
 <hr>
 <p>cv2读取图片默认为BGR模式，且<code>imshow</code>, <code>imwrite</code>也都对应BGR模式！<br>
 <strong>BGR-&gt;RGB</strong>:</p>
@@ -1094,6 +1169,22 @@ shell开头写</p>
 <p>adduser 较为便捷</p>
 <p>另useradd也可，如</p>
 <pre><code>useradd -d /home/hongt -s /bin/bash -m hongt
+</code></pre>
+<hr>
+<h3 id="sudo">sudo</h3>
+<p>以下命令可以查看系统上拥有sudo权限的所有用户:</p>
+<pre><code>getent group sudo
+</code></pre>
+<p>添加sudo用户一种方式为在<code>/etc/sudoers</code> 里添加一行：</p>
+<pre><code>[username] ALL=(ALL:ALL) ALL
+</code></pre>
+<p>另一种方式：</p>
+<pre><code>sudo usermod -aG sudo [username]
+</code></pre>
+<hr>
+<h3 id="chown">chown</h3>
+<p>对于linux系统中的文件，有些无法编辑，除了用chmod更改其读写权限外，也可利用chown来更改该文件所属的用户。对于文件夹加入<code>-R</code>参数表示递归即可。</p>
+<pre><code>sudo chown -R [username] [dirname]
 </code></pre>
 <hr>
 <h3 id="ls">ls</h3>
@@ -1245,6 +1336,12 @@ zip jpg.zip *.jpg //zip格式的压缩，需要先下载zip for linux
 lsblk
 </code></pre>
 <p><code>lsblk</code>命令用于列出所有可用块设备的信息，而且还能显示他们之间的依赖关系，但是它不会列出RAM盘的信。</p>
+<hr>
+<h3 id="mkdir">mkdir</h3>
+<p>直接make dir时，超过两层会报错，而加入 -p 参数后则多层均可以。</p>
+<pre class="hljs"><code><div>mkdir -p [dir-name]
+</div></code></pre>
+<hr>
 <h3 id="%E6%9F%A5%E7%9C%8B%E6%9D%80%E6%AD%BB-%E8%BF%9B%E7%A8%8B">查看/杀死 进程</h3>
 <p>查看进程：</p>
 <pre><code>ps -ef |grep [process-name]
@@ -1441,8 +1538,8 @@ pip是python自带的，而conda是安装anaconda或者miniconda提供的，俗�
 通过conda安装的工具包比如tensorflow只会出现在conda list中，不会出现在pip list中，倒过来也一样。</p>
 </blockquote>
 <hr>
-<p><strong>记录一次pytorch指定版本安装过程</strong>：
-安装 pytorch 1.1.0和 torchvision 0.3.0，服务器上cuda版本为10.1。</p>
+<p><strong>记录一次pytorch指定版本安装过程</strong>：</p>
+<p>安装 pytorch 1.1.0和 torchvision 0.3.0，服务器上cuda版本为10.1。</p>
 <p>参考官网推荐方式：
 <code>conda install pytorch torchvision cuda-toolkit=10.1 -c pytorch</code>
 先安装pytorch，采用：
@@ -1504,6 +1601,124 @@ alias python='/usr/bin/python3.5'
 <pre><code>export PATH=&quot;$PATH:/home/hongt/anaconda3/bin&quot;
 </code></pre>
 <p>其中<code>$PATH</code>即为已有的环境变量；务必使用双引号！</p>
+<hr>
+<h3 id="cuda%E9%85%8D%E7%BD%AE">CUDA配置</h3>
+<p>安装好CUDA后在<code>~/.bashrc</code>中将其路径加入PATH，再source更新一下即可，<code>nvcc -V</code>便可看到所装版本。</p>
+<pre class="hljs"><code><div>export PATH=/usr/local/cuda-11.1/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:$LD_LIBRARY_PATH
+
+source ~/.bashrc 
+nvcc -V 
+</div></code></pre>
+<hr>
+<h1 id="git">Git</h1>
+<h3 id="push">push</h3>
+<p>git 把本地分支dev推到远程，运行</p>
+<pre><code>git push origin dev
+</code></pre>
+<p>即可，此时远程对应分支名字相同，也为dev。
+而如果想把本地分支推到远程新的分支上（名字也不相同），如命名为dev_new，只需：</p>
+<pre><code>git push origin dev:dev_new
+</code></pre>
+<hr>
+<h3 id="clone">clone</h3>
+<ul>
+<li>
+<p>git clone默认会把远程仓库整个给clone下来，但只会在本地默认创建一个master分支。如果远程还有其他的分支，此时用<code>git branch -a</code>查看所有分支，能看到远程的所有的分支，如remotes/origin/dev，可以使用checkout命令来把远程分支取到本地，并自动建立tracking：</p>
+<pre><code>  git checkout -b dev origin/dev
+</code></pre>
+</li>
+<li>
+<p>git clone时也可 -b 参数只克隆指定分支，如只clone 远程的dev分支：</p>
+<pre><code>  git clone -b dev [origin-url]
+</code></pre>
+</li>
+<li>
+<p>而把远程分支拉取到本地时默认名字也相同，若想把远程dev分支拉到本地且命名为dev_new，只需</p>
+<pre><code>  git checkout -b dev_new origin/dev
+</code></pre>
+</li>
+</ul>
+<p>参考：<a href="https://www.cnblogs.com/bluestorm/p/7380141.html">git clone 某个分支或者所有分支</a></p>
+<hr>
+<h3 id="pull">pull</h3>
+<p>pull 相当于先 fetch 再 merge。如<code>git pull</code> 等效于先执行 <code>git fetch origin [当前分支名]</code>, 再执行 <code>git merge FETCH_HEAD</code>.
+pull 虽然一步到位，但个人多数情况下偏向于后者，一来先 fetch 再借助 diff 命令可以看到远程与本地仓库的区别；二来当拉取时本地和远程有冲突时，也先有个准备。</p>
+<p>git fecth 有四种用法：</p>
+<ul>
+<li><code>git fetch</code>
+这将更新git remote 中所有的远程repo 所包含分支的最新commit-id, 将其记录到.git/FETCH_HEAD文件中。</li>
+<li><code>git fetch [remote_repo]</code><br>
+这将更新名称为remote_repo 的远程repo上的所有branch的最新commit-id，将其记录。</li>
+<li><code>git fetch [remote_repo] [remote_branch_name]</code>
+这将这将更新名称为remote_repo 的远程repo上的分支： remote_branch_name。</li>
+<li><code>git fetch [remote_repo] [remote_branch_name]:[local_branch_name]</code>
+这将这将更新名称为remote_repo 的远程repo上的分支： remote_branch_name ，并在本地创建local_branch_name 本地分支保存远程分支的所有数据。</li>
+</ul>
+<p>举例说明：将远程origin仓库的xx分支合并到本地的yy分支，常见做法为：</p>
+<pre><code>git fetch origin xx
+git checkout yy
+git merge FETCH_HEAD
+</code></pre>
+<p>此时的MERGE_HEAD即指向origin/xx，若想合并其他远程分支当然也可，如想合并远程的dev分支到本地当前分支：<code>git merge origin/dev</code>。</p>
+<p>参考：<a href="https://blog.csdn.net/Json159/article/details/82714784">git fetch 、git pull、git merge 的理解</a></p>
+<hr>
+<h3 id="diff">diff</h3>
+<p>常用于比较本地分支和对应远程分支的区别。可先更新下本地的远程分支：</p>
+<pre><code>git fetch origin
+</code></pre>
+<ul>
+<li>
+<p>git log 输出本地与远程的差集（显示远程有而本地没有的commit信息），如比较master分支的区别：</p>
+<pre><code>  git log master..origin/master
+</code></pre>
+</li>
+<li>
+<p>git diff 统计文件的改动，一般形式为：</p>
+<pre><code>  git diff [local_branch] [remote]/[remote_branch]
+</code></pre>
+<p>其中还有<code>--stat --cached --color</code>等参数来控制输出的详尽程度，<code>--stat</code>表示摘要，而<code>--cached</code>表示已缓存的改动。笔者一般会先加入<code>--stat</code>看一下diff的概括，若有需要再去掉<code>--stat</code>看详细区别，如：</p>
+<pre><code>  git --stat diff dev origin/dev
+  git diff dev origin/dev
+</code></pre>
+</li>
+</ul>
+<p>参考：<a href="https://blog.csdn.net/meng19910117/article/details/84402456">git比较本地仓库和远程仓库的差异</a></p>
+<hr>
+<h3 id="gitignore">.gitignore</h3>
+<p>有时候在项目开发过程中，突然心血来潮想把某些目录或文件加入忽略规则，按照上述方法定义后发现并未生效，原因是.gitignore只能忽略那些原来没有被track的文件，如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。那么解决方法就是先把本地缓存删除（改变成未track状态），然后再提交。命令如下：</p>
+<pre><code>git rm -r --cached .
+git add .
+git commit -m &quot;update .gitignore&quot;
+</code></pre>
+<p>文件.gitignore的格式规范：</p>
+<ul>
+<li>#为注释</li>
+<li>可以使用shell所使用的正则表达式来进行模式匹配</li>
+<li>匹配模式最后跟&quot;/&quot;说明要忽略的是目录</li>
+<li>使用 ! 取反（例如目录中包含 test.a，并且gitignore文件中包含 *.[oa]，如果在文件中加入 !test.a 表明忽略除test.a文件以外的后缀名为.a或者.o的文件）</li>
+</ul>
+<p>配置语法：</p>
+<ul>
+<li>以斜杠“/”开头表示目录；</li>
+<li>以星号“*”通配多个字符；</li>
+<li>以问号“?”通配单个字符</li>
+<li>以方括号“[]”包含单个字符的匹配列表；</li>
+<li>以叹号“!”表示不忽略(跟踪)匹配到的文件或目录。</li>
+</ul>
+<p>例子：</p>
+<pre><code>*.a  # 忽略所有 .a 结尾的文件
+!lib.a  # 但 lib.a 除外
+/TODO  # 仅仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO
+build/  # 忽略 build/ 目录下的所有文件
+doc/*.txt  # 会忽略 doc/notes.txt 但不包括 doc/server/arch.txt
+</code></pre>
+<p>此外，git 对于 .gitignore 配置文件是按行从上到下进行规则匹配的，意味着如果前面的规则匹配的范围更大，则后面的规则将不会生效。</p>
+<h3 id="commit">commit</h3>
+<p>如果commit注释写错了，只是想改一下注释，只需要：</p>
+<pre><code>git commit --amend
+</code></pre>
+<p>此时会进入默认vim编辑器，修改注释完毕后保存就好了。</p>
 <hr>
 <h1 id="mac">Mac</h1>
 <h3 id="%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE">常用快捷键</h3>
@@ -1579,6 +1794,13 @@ code<br>
 <h4 id="%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87">插入图片</h4>
 <p>一般插入eps或PDF格式图片，而将jpg、png等格式图片转化为eps格式可借助<code>bmeps</code>命令，在安装了Tex后已具有<code>bmeps</code>模块。在终端中采取如下命令即可（注意写对图片路径，Windows系统下在指定文件夹中按住Shift键再右键选择‘在此处打开pewershell窗口’即可）：
 <code>bmeps -c *.png *.eps</code></p>
+<hr>
+<h3 id="cmd-%E8%84%9A%E6%9C%AC">cmd 脚本</h3>
+<p>Windows中的执行脚本后缀名为<code>.bat</code>，不同于Linux系统中的<code>.sh</code>。笔者经常需要借助cmd窗口ssh远程登录服务器，故写个脚本更为便捷。如新建个login.bat，在里面写入下行命令即可：</p>
+<pre><code>start cmd /c &quot;ssh [username]@[IP-address]&quot;
+</code></pre>
+<p>其中<code>cmd /k</code>表示cmd后面的命令执行完后不关闭窗口；而<code>cmd /c</code>表示执行完cmd命令后关闭窗口。</p>
+<p>参考：<a href="https://blog.csdn.net/weixin_46909756/article/details/108726489">写一个打开cmd窗口并执行cmd命令的Windows脚本（.bat文件）</a></p>
 <hr>
 <h3 id="usb%E5%A4%B1%E6%95%88">USB失效</h3>
 <p>笔者有一天打开电脑（Windows系统）突然发现所有的USB接口都失效了，导致外接鼠标键盘都失效，插入U盘也读取不了。网上搜了很多教程都不管用，一类方法为电脑在节电模式下会禁用外接USB口等，所以需关闭这些设置，还有卸载USB驱动再重装等（可借助驱动精灵等软件），笔者试了均无果。</p>

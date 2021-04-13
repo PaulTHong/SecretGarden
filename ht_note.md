@@ -13,21 +13,148 @@
 	+ opencv2
 + MATLAB
 + Linux
++ Git
 + Mac
 + Markdown
 + LaTex
 + Others
 ---
-<!-- code_chunk_output -->
-
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [Python](#python)
+	- [Pytorch](#pytorch)
+		- [Tensor](#tensor)
+		- [item()](#item)
+		- [torchvision.transforms](#torchvisiontransforms)
+		- [torchvision.save_image](#torchvisionsave_image)
+		- [Relu](#relu)
+		- [nn.ConvTranspose2d](#nnconvtranspose2d)
+		- [torchvision](#torchvision)
+		- [cv2的坑](#cv2的坑)
+		- [调节学习率](#调节学习率)
+		- [torch.nn.DataParallel()](#torchnndataparallel)
+		- [torch.nn.DistributedDataParallel](#torchnndistributeddataparallel)
+		- [num_workers](#num_workers)
+		- [device](#device)
+		- [multinomial](#multinomial)
+		- [load_lua -> torchfile.load](#load_lua---torchfileload)
+		- [hook](#hook)
+		- [torchsummary](#torchsummary)
+	- [Tensorflow](#tensorflow)
+		- [tf.Session()](#tfsession)
+		- [tensorflow 之 checkpoint](#tensorflow-之-checkpoint)
+		- [选择GPU](#选择gpu)
+		- [tf.nn](#tfnn)
+		- [卷积探讨](#卷积探讨)
+		- [感受野](#感受野)
+		- [ResNet](#resnet)
+		- [(N,C,W,H)](#ncwh)
+		- [优化器](#优化器)
+		- [training accuracy](#training-accuracy)
+	- [Python](#python-1)
+		- [print](#print)
+		- [np.clip()](#npclip)
+		- [np.random.choice()](#nprandomchoice)
+		- [排序](#排序)
+		- [zip](#zip)
+		- [eval()](#eval)
+		- [f-string](#f-string)
+		- [glob](#glob)
+		- [os.path.dirname(\_\_file\_\_)](#ospathdirname__file__)
+		- [argparse](#argparse)
+			- [bool型argparse 坑](#bool型argparse-坑)
+		- [class](#class)
+		- [\_\_call\_\_()](#__call__)
+		- [\_\_dir\_\_()](#__dir__)
+		- [Python函数——传对象(call by object)](#python函数传对象call-by-object)
+		- [globals()](#globals)
+		- [zfill](#zfill)
+		- [ravel() & flatten()](#ravel--flatten)
+		- [np.rollaxis（）](#nprollaxis)
+		- [matplotlib](#matplotlib)
+		- [plt.plot()](#pltplot)
+	- [opencv2](#opencv2)
+		- [resize](#resize)
+- [MATLAB](#matlab)
+		- [MATLAB bsxfun](#matlab-bsxfun)
+	- [Python 与 MATLAB的一些函数区别（细节）](#python-与-matlab的一些函数区别细节)
+		- [复数域](#复数域)
+- [Linux](#linux)
+		- [bash](#bash)
+		- [adduser useradd](#adduser-useradd)
+		- [sudo](#sudo)
+		- [chown](#chown)
+		- [ls](#ls)
+		- [软链接](#软链接)
+		- [ssh](#ssh)
+		- [查看CPU GPU使用情况](#查看cpu-gpu使用情况)
+		- [输出机制](#输出机制)
+		- [export & echo](#export--echo)
+		- [tar](#tar)
+		- [scp](#scp)
+		- [Ctrl类快捷键](#ctrl类快捷键)
+		- [查看位置](#查看位置)
+		- [Linux查看文件大小数量](#linux查看文件大小数量)
+		- [Linux 查看硬盘分区内存](#linux-查看硬盘分区内存)
+		- [mkdir](#mkdir)
+		- [查看/杀死 进程](#查看杀死-进程)
+		- [ps ax | grep python](#ps-ax--grep-python)
+		- [dos2unix](#dos2unix)
+		- [安装MATLAB](#安装matlab)
+		- [windows 远程连接 linux](#windows-远程连接-linux)
+		- [rename](#rename)
+		- [vim](#vim)
+		- [~/.vimrc](#vimrc)
+		- [我的~/.vimrc](#我的vimrc)
+		- [vim自动补全](#vim自动补全)
+		- [vim Bundle](#vim-bundle)
+		- [pip](#pip)
+		- [conda](#conda)
+		- [Linux更改默认Python版本](#linux更改默认python版本)
+		- [查看网关](#查看网关)
+		- [slurm集群管理](#slurm集群管理)
+		- [tmux](#tmux)
+		- [$PATH](#path)
+		- [CUDA配置](#cuda配置)
+- [Git](#git)
+		- [push](#push)
+		- [clone](#clone)
+		- [pull](#pull)
+		- [diff](#diff)
+		- [.gitignore](#gitignore)
+		- [commit](#commit)
+- [Mac](#mac)
+		- [常用快捷键](#常用快捷键)
+		- [新建文件](#新建文件)
+		- [隐藏文件](#隐藏文件)
+- [Markdown](#markdown)
+		- [Markdown 超链接](#markdown-超链接)
+		- [Markdown 空格](#markdown-空格)
+		- [Markdown 代码](#markdown-代码)
+		- [Markdown 公式](#markdown-公式)
+		- [Markdown 图片](#markdown-图片)
+		- [Markdown 目录](#markdown-目录)
+- [LaTex](#latex)
+		- [VSCode 编译器](#vscode-编译器)
+		- [一些符号代码](#一些符号代码)
+- [Others](#others)
+		- [paper writing](#paper-writing)
+			- [插入图片](#插入图片)
+		- [cmd 脚本](#cmd-脚本)
+		- [USB失效](#usb失效)
+		- [server config(~2020.12)](#server-config202012)
+
+<!-- /code_chunk_output -->
+
+
 
 
 ---
 
 # Python
-
 
 ## Pytorch
 
@@ -57,10 +184,12 @@
 
 ---
 ### item()
+
 `item()`只针对仅含一个元素的张量，取出其值。若为多个元素的张量，可考虑`tolist()`。
 
 ---
 ### torchvision.transforms
+
 + `torchvision.transforms.ToTensor()`
 输入为`PIL.Image`类型 或`numpy.array`中的`numpy.uint8`类型时，才会对其归一化(scale)，即除以255。
 
@@ -83,6 +212,7 @@ GPU上的Tensor不能直接转为numpy，需先转为CPU上的Tensor再转为num
 
 ---
 ### torchvision.save_image
+
 	mul(255).add_(0.5).clamp(0, 255).permute(1, 2, 0).to('cpu', torch.uint8)
 
 对于uint8类型，torch与numpy均为**向下取整**，故先+0.5再clamp。
@@ -99,6 +229,7 @@ inplace为True，将会改变输入的数据 ，否则不会改变原输入，�
 
 ---
 ### nn.ConvTranspose2d
+
 $H_{out} = (H_{in} - 1)\times stride - 2p + dilation\times (k-1) + output\_padding + 1$
 
 反卷积即对应上采样过程，HW大小的计算对应卷积计算公式的逆过程。 nn.ConvTranspose2d函数默认参数为：dilation=1, output_padding=0。
@@ -111,6 +242,7 @@ $H_{out} = (H_{in} - 1)\times stride - 2p + dilation\times (k-1) + output\_paddi
 
 ---
 ### cv2的坑
+
 因cv2读取图片为BGR格式，若想将其转为RGB格式后转为tensor, 
 `img = img[:, :, -1]` 后使用 `torch.from_numpy(img)` 会报错。
 解决方案一：
@@ -120,6 +252,7 @@ $H_{out} = (H_{in} - 1)\times stride - 2p + dilation\times (k-1) + output\_paddi
 
 ---
 ### 调节学习率
+
 在Pytorch 1.1.0及以后的版本中，应先更新优化器optimizer，再更新学习率，代码框架可如下所示：
 
 	scheduler = ...
@@ -132,6 +265,7 @@ $H_{out} = (H_{in} - 1)\times stride - 2p + dilation\times (k-1) + output\_paddi
 
 ---
 ### torch.nn.DataParallel()
+
 model, optimizer 等均可用DataParallel包裹，即表示用多块GPU训练。（CUDA_VISIBLE_DEVICES=0,1,2 此种方式仍为单卡训练，只是占用多块卡的显存。）
 
 以model为例，其一旦被DataParallel包裹之后，其对应的参数state_dict的keys前会多七个字符，即`module.`。所以在读写checkpoint时需注意，单卡时不能有`module.`，所以读取一个多卡训练的checkpoint，中间需加入`.module`，即由`model.state_dict()` 变为`model.module.state_dict()`，其实就相当于把读取的参数字典的keys去掉了前七个字符`module.`。
@@ -161,21 +295,40 @@ model, optimizer 等均可用DataParallel包裹，即表示用多块GPU训练。
 
 笔者在单节点多卡上进行分布式训练时，习惯用`CUDA_VISIBLE_DEVICES=2,3 python *.py`的方式来运行，此时程序会找到编号为2，3的两块GPU，且给它们的rank即为0和1。
 
+在argparse里有一个`local_rank`参数：
+```
+parser.add_argument("--local_rank", type=int, default=-1, help="number of cpu threads to use during batch generation")
+```
+通过`torch.distributed.launch`来启动训练，`torch.distributed.launch` 会给模型分配一个args.local_rank的参数，所以在训练代码中要解析这个参数，也可以通过`torch.distributed.get_rank()`获取进程id。
+
 关于ImageNet等的分布式训练，可参考Github代码: [distributed-pytorch](https://github.com/richardkxu/distributed-pytorch)
 
 ---
-### num_worker
-`torch.utils.data.DataLoader`常以batch的方式读取数据，其参数`num_worker`表示所用核数（并行读取），`num_worker=0`表示只用一个主进程读取。
+### num_workers
+
+`torch.utils.data.DataLoader`常以batch的方式读取数据，其参数`num_workers`表示所用核数（并行读取），`num_workers=0`表示只用一个主进程读取。
 
 在笔者用风格迁移做数据增强的实验中，风格迁移本身需调用一个VGG网络，而分类采用的ResNet50网络。继承了`torch.utils.Dataset`类，在里面加入了style_transform操作，从而相当于在`DataLoader`阶段数据就需要放到cuda里。
 
-采取`torch.nn.DataParallel`单节点多卡训练时，会报错`RuntimeError: CUDA error: initialization error`，解决办法一只要把`num_worker`设为0就解决了；但考虑到`num_worker=4`等可能会提升速度，笔者还是尝试着去解决，在主函数的`if __name__ =='__main__':`后加入
+采取`torch.nn.DataParallel`单节点多卡训练时，会报错`RuntimeError: CUDA error: initialization error`，解决办法一只要把`num_workers`设为0就解决了；但考虑到`num_workers=4`等可能会提升速度，笔者还是尝试着去解决，在主函数的`if __name__ =='__main__':`后加入
 	
 	import multiprocessing as mp
 	mp.set_start_method('spawn')
 便解决了，意为用多进程读取数据。（注意此时这两行代码必须得写在`if __name__ =='__main__':`后，不然也可能报错。）
 
-而同样的代码改为`torch.nn.DistributedDataParallel`版本的分布式单节点多卡训练后，`num_worker=0`好像也报错了，猜测是分布式本身就是多进程，与只有一个主进程读取数据矛盾。然后改为`num_worker=4`报了个风格迁移的网络的模型参数weight和输入weight不在一张卡上，稍微修改了下vgg.cuda()和decoder.cuda()在代码中的位置，用了个`.to(torch.cuda.current_device())`，便解决了，因为分布式下每个进程会使用一块GPU，此时load数据时保证风格迁移网络和数据输入都在这张卡上，就没有问题了。
+而同样的代码改为`torch.nn.DistributedDataParallel`版本的分布式单节点多卡训练后，`num_workers=0`好像也报错了，猜测是分布式本身就是多进程，与只有一个主进程读取数据矛盾。然后改为`num_workers=4`报了个风格迁移的网络的模型参数weight和输入weight不在一张卡上，稍微修改了下vgg.cuda()和decoder.cuda()在代码中的位置，用了个`.to(torch.cuda.current_device())`，便解决了，因为分布式下每个进程会使用一块GPU，此时load数据时保证风格迁移网络和数据输入都在这张卡上，就没有问题了。
+
+---
+### device
+
+`torch.cuda.current_device()`返回的是一个整数，如0 1，而获取某张量当前的device，用str()包裹后即为'cuda:0'的形式。
+```
+a = torch.tensor([2, 3])
+device = torch.cuda.current_device()  # 0 int
+b = a.to(device)  # a: tensor([2, 3])  b: tensor([2, 3], device='cuda:0') 
+b.device  # device(type='cuda', index=0)
+str(b.device)  # 'cuda:0'
+```
 
 ---
 ### multinomial
@@ -188,9 +341,58 @@ model, optimizer 等均可用DataParallel包裹，即表示用多块GPU训练。
 
 ---
 ### load_lua -> torchfile.load
+
 pytorch由0.4版本升级为1.0+版本后，一些函数会发生变化。
 对于训好的老式参数模型，读取函数由`load_lua`变为`torchfile.load`。
 在一次实际操作中，记读取的模型为`vgg`，则其第一层的权重调用方式由`vgg.get(0).weight` 变为`vgg.modules[0].weight`。
+
+---
+### hook
+
+获取中间层feature map时经常利用hook函数，如`register_forward_hook(fn)`，而其参数`fn`为一函数，定义形式为`fn(module, input, output)`，其中的 input 和 output 均为 tuple 型，里面元素为 Tensor。
+
+--- 
+### torchsummary
+
+可借助`torchsummary`库查看网络结构，包括各层feature map的大小维度。
+
+	from torchsummary import summary 
+	summary(net, (3, 32, 32), device='gpu')
+
+---
+### cProfile
+
+借助cProfile库观测代码各部分消耗时间。
+如下第一行所示，在原有python运行脚本汇总加入 -m 和 -o 参数即可，其中 -o 表示输出文件名。之后在对自定义命名的 time.profile 运行第二行即可，`p.sort_stats('time').print_stats(50)` 表示按运行时间降序，只显示前五十项。
+```
+python -m cProfile -o time.profile tmp.py
+python -c "import pstats; p=stats.Stats('time.profile'); p.sort_stats('time').print_stats(50)" > time.print
+```
+
+---
+### 多进程之间共享全局变量
+
+在做ISBI数据集的实验时，valid时会开个子进程来调用路径为script_path的java脚本，其会计算指标值。而想在主进程中获取指标值时，便可借助subprocess库了。
+```
+import subprocess
+# subprocess.call([Fiji_path, script_path, original_label, proposal_label, tmp_file])  # 不需要子进程返回信息时运行此行即可
+return_info = subprocess.Popen([Fiji_path, script_path, original_label, proposal_label, tmp_file], shell=False, stdout=subprocess.PIPE)
+while return_info.poll() is None: 
+    line = return_info.stdout.readline() 
+    line = line.strip().decode('utf-8')
+    ...
+```
+当然了，如果使用子进程只是为了获取一个值的话有些大材小用。比如在此实验的java脚本中把指标值保存在一个文件里，然后python代码里再读取该文件即可。
+
+此外查到有一个python多进程共享变量Value：
+```
+multiprocessing.Value(typecode_or_type, *args[, lock])
+```
+比如`Value("i", 0)`，i表示整型，两个字节。"d" 表示float?
+再比如`import ctypes; Value(ctypes.c_float, 1.0)`。
+
+参考：[Python中多进程间通信（multiprocessing.Manager)](https://blog.csdn.net/qq_36653505/article/details/85254909)
+
 
 ---
 ## Tensorflow
@@ -231,12 +433,13 @@ tensorflow由Session.run()或eval()返回的任何张量都是numpy数组类型�
 
 ---
 ### tf.nn
->
-1) 如果只是想快速了解一下大概，不建议使用`tf.nn.conv2d`类似的函数，可以使用`tf.layers`和`tf.contrib.layers`高级函数。  
-2) 当有了一定的基础后，如果想在该领域进行深入学习，建议使用`tf.nn.conv2d`搭建神经网络，此时会帮助你深入理解网络中参数的具体功能与作用，而且对于loss函数需要进行正则化的时候很便于修改，能很清晰地知道修改的地方。而如果采用`tf.layers`和`tf.contrib.layers`高级函数，由于函数内部有正则项，不利于深入理解。而且如果编写者想自定义loss，此时比较困难，如果读者想共享参数，计算loss函数中的正则项时，应该只计算一次，如果采用高级函数可能不清楚到底如何计算的。
+
+> 1) 如果只是想快速了解一下大概，不建议使用`tf.nn.conv2d`类似的函数，可以使用`tf.layers`和`tf.contrib.layers`高级函数。  
+> 2) 当有了一定的基础后，如果想在该领域进行深入学习，建议使用`tf.nn.conv2d`搭建神经网络，此时会帮助你深入理解网络中参数的具体功能与作用，而且对于loss函数需要进行正则化的时候很便于修改，能很清晰地知道修改的地方。而如果采用`tf.layers`和`tf.contrib.layers`高级函数，由于函数内部有正则项，不利于深入理解。而且如果编写者想自定义loss，此时比较困难，如果读者想共享参数，计算loss函数中的正则项时，应该只计算一次，如果采用高级函数可能不清楚到底如何计算的。
 
 ---
 ### 卷积探讨
+
 输出大小m与输入大小n的关系，其中p表示补丁padding大小，k表示卷积核kernel大小，s表示滑动步长stride：
 
 $$ m = \frac{n + 2*p - k}{s} + 1 $$
@@ -265,6 +468,7 @@ $$m = \lfloor \frac{n-1}{s} + 1 \rfloor $$
 
 ---
 ### 感受野
+
 $$ RF_n = RF_{n-1} + (kernel\_size - 1) * stride $$
 
 RF(n): 当前层感受野
@@ -277,6 +481,7 @@ $$ (k - 1) * l + 1 $$
 
 ---
 ### ResNet
+
 Bottleneck每个block出去channel 为 planes * expansion, 如 512 * 4 。
 
 ---
@@ -285,13 +490,21 @@ Bottleneck每个block出去channel 为 planes * expansion, 如 512 * 4 。
 tensorflow默认为NHWC，其访存局部性更好；而torch的NCHW为GPU推荐方式。
 
 ### 优化器
+
 据说SGD比ADAM稳定。
 
 ### training accuracy
+
 某些情况下全体数据集上的training accuracy显示为100%时不一定为100%，如在采用BatchNormalization模块时，$\mu$和$\sigma$随着batch变化而变化，而训练集上的准确度是以batch为单位来测量的。
 
 ---
 ## Python
+
+---
+### print
+
+不换行输出，`\r`表示会回到行头：
+`print(*, end='\r')`  
 
 ---
 ### np.clip()
@@ -300,6 +513,7 @@ tensorflow默认为NHWC，其访存局部性更好；而torch的NCHW为GPU推荐
 
 ---
 ### np.random.choice()
+
 `random.choice()`函数每次只能选择一个，而`np.random.choice()`则可选择多个，但需注意一个默认的参数`replace=True`，表示选取的元素可能重复。
 
 如下代码表示从`a`中不重复地选取三个元素，`a`可以是`list`、`np.array`等类型，其中每一个元素被选到的比例均记录在参数`p`中。
@@ -321,11 +535,13 @@ python3中 `zip()` 返回iterator，没有`.sort()`属性, 可`list(zip())`再�
 
 ---
 ### eval()
+
 `eval()`函数十分强大，官方demo解释为：将字符串str当成有效的表达式来求值并返回计算结果。`exec()`功能类似，执行python语句。
 
 ---
 
 ### f-string
+
     f"string"
 类似str.format{}接受的格式字符串。
 注：Python3.6才开始有。
@@ -353,6 +569,7 @@ python3中 `zip()` 返回iterator，没有`.sort()`属性, 可`list(zip())`再�
 
 ---
 ### os.path.dirname(\_\_file\_\_)
+
 在脚本test.py里写入`print(os.path.dirname(__file__))`。
 * 当脚本是以完整路径被运行的， 那么将输出该脚本所在的完整路径，比如：   
     ```
@@ -366,6 +583,7 @@ python3中 `zip()` 返回iterator，没有`.sort()`属性, 可`list(zip())`再�
     ```
 
 ### argparse
+
 	import argparse
 	parser = argparse.ArgumentParser()
 	parser.add_argument('-n', '--name')
@@ -423,6 +641,7 @@ argparse有参数action, 取值有两种：
 
 ---
 ### class
+
 class里面有多个类的属性时，如多个全连接层fc1, fc2, fc3：
   
 1. 采用setattr 和getattr
@@ -440,10 +659,12 @@ class里面有多个类的属性时，如多个全连接层fc1, fc2, fc3：
 
 ---
 ### \_\_dir\_\_()
+
 取类的属性，如`a.__dir__()`，`a`表示一个类的对象。
 
 ---
 ### Python函数——传对象(call by object)
+
 > 结论：Python不允许程序员选择采用传值还是传引用。Python参数传递采用的肯定是“传对象引用”的方式。这种方式相当于传值和传引用的一种综合。如果函数收到的是一个**可变对象**（比如字典或者列表）的引用，就能修改对象的原始值－－相当于通过“**传引用**”来传递对象。如果函数收到的是一个**不可变对象**（比如数字、字符或者元组）的引用，就不能直接修改原始对象－－相当于通过“**传值**'来传递对象。
 
 测试：numpy数组也是“传引用”，不想传引用时可采用：
@@ -486,6 +707,7 @@ class里面有多个类的属性时，如多个全连接层fc1, fc2, fc3：
 ---
 
 ### globals() 
+
 该函数会以字典类型返回当前位置的全部全局变量。
 
 ---
@@ -497,6 +719,7 @@ class里面有多个类的属性时，如多个全连接层fc1, fc2, fc3：
 
 ---
 ### ravel() & flatten()
+
 `a.ravel()`和`a.flatten()`效果一样。 
 但前者是产生视图，令`b=a.ravel()` ，b变a也变，`flatten`则不变。  
 但
@@ -586,6 +809,7 @@ a是一个数组，将第n2个维度移到n1维度前。
 
 ---
 ### matplotlib
+
 matplotlib在终端中不能显示图（通过ssh等连接Linux服务器）
 
 	import matplotlib as mpl
@@ -599,6 +823,7 @@ matplotlib经常用在python shell中用作交互式编程，也有将其作为�
 
 ---
 ### plt.plot()
+
 `from matplotlib import pyplot as plt`
 + **保存图片**
   `plt.savefig()`函数第一个参数为保存路径，如*.png，但png等格式图片清晰度有损，而存为*.svg为无损格式，svg格式可通过浏览器打开。另一个参数为`dpi`，其值越大图片的分辨率越高，`dpi=500`在一定程度上已经很清晰了。
@@ -617,6 +842,8 @@ matplotlib经常用在python shell中用作交互式编程，也有将其作为�
   ...
   ```
   ![Plot_tick](https://github.com/PaulTHong/SecretGarden/raw/master/images/plot_tick.png)
+
+
 ---
 ## opencv2
 
@@ -624,6 +851,7 @@ matplotlib经常用在python shell中用作交互式编程，也有将其作为�
 ### resize
 
 先宽再高！
+resize 为原来的 width 和 height 也还是有一点时间消耗的。
 
 ---
 cv2读取图片默认为BGR模式，且`imshow`, `imwrite`也都对应BGR模式！  
@@ -667,6 +895,7 @@ cv2读取图片默认为BGR模式，且`imshow`, `imwrite`也都对应BGR模式�
 
 ---
 ## Python 与 MATLAB的一些函数区别（细节）
+
 Python中的matrix类型对象加个 **.A** 可变为np.array型对象。
 
 MATLAB 　 **A\b** 即求解Ax=b时的x, 当A不是方阵时仍可求解, 所以比inv(A)*b要强大些；Python中A\b不是方阵时则不行，可采用最小二乘思想求解，如求A' A x = A' b。
@@ -681,6 +910,7 @@ Python中U V一致，S为一向量。两种S可通过diag命令互相转化。
 
 ---
 ### 复数域
+
 MATLAB一个复数矩阵(向量也为矩阵)记为A，则  **A'** 表示A的共轭再转置，而 **A.'** 才表示A的转置，`conj(A)` 表示A的共轭。
 
 Python中则**A.T**表示A的转置，`A.conjugate()`或者`np.conjugate(A)`表示A的共轭。
@@ -694,6 +924,7 @@ Python中则**A.T**表示A的转置，`A.conjugate()`或者`np.conjugate(A)`表�
 # Linux
 
 ### bash
+
 推荐bash，比sh更强大。
 shell开头写
     
@@ -709,7 +940,28 @@ adduser 较为便捷
 	useradd -d /home/hongt -s /bin/bash -m hongt
 
 ---
+### sudo 
 
+以下命令可以查看系统上拥有sudo权限的所有用户:
+ 
+	getent group sudo
+
+添加sudo用户一种方式为在`/etc/sudoers` 里添加一行： 
+	
+	[username] ALL=(ALL:ALL) ALL
+
+另一种方式：
+	
+	sudo usermod -aG sudo [username]
+
+---
+### chown
+
+对于linux系统中的文件，有些无法编辑，除了用chmod更改其读写权限外，也可利用chown来更改该文件所属的用户。对于文件夹加入`-R`参数表示递归即可。
+
+	sudo chown -R [username] [dirname]
+
+---
 ### ls
 
 ls隐藏pyc文件，可写在`~/.bashrc`中：
@@ -720,6 +972,7 @@ ls隐藏pyc文件，可写在`~/.bashrc`中：
 
 ---
 ### 软链接
+
 `ln -s 原链接路径 软链接路径 `
 
 在链接路径有多层嵌套时，建议采用绝对路径避免出错。
@@ -752,6 +1005,7 @@ ls隐藏pyc文件，可写在`~/.bashrc`中：
 
 ---
 ### 输出机制
+
 stdout和stderr两种模式，对应编号分别为1和2。
 `[cmd] >[filename]` 表示将输出直接写入filename，但若报错仍打印在终端屏幕。
 要使错误也写入文件，不打印在终端，末尾加个`2>&1`即可，即
@@ -781,6 +1035,7 @@ stdout和stderr两种模式，对应编号分别为1和2。
 
 ---
 ### export & echo
+
 linux环境下每次新打开一个窗口都会预执行`~/.bashrc`。
 `export` 给变量赋值， `echo` 查看变量值。
 
@@ -857,6 +1112,7 @@ But failed!
 建议先打包(压缩)再复制。
 
 ### Ctrl类快捷键
+
 `Ctrl+A`: 光标移到行首。
 `Ctrl+E`: 光标移到行尾。
 `Ctrl+S`：冻结窗口。注意：这不是保存的命令。当屏幕输出过快时，用户可冻结窗口来查看瞬时的输出。
@@ -894,10 +1150,21 @@ But failed!
 
 ---
 ### Linux 查看硬盘分区内存
+
     df -hl
 	lsblk
 	
 `lsblk`命令用于列出所有可用块设备的信息，而且还能显示他们之间的依赖关系，但是它不会列出RAM盘的信。
+
+---
+### mkdir
+
+直接make dir时，超过两层会报错，而加入 -p 参数后则多层均可以。
+```
+mkdir -p [dir-name]
+```   
+
+---
 ### 查看/杀死 进程
 
 查看进程： 
@@ -910,6 +1177,7 @@ But failed!
 
 ---
 ### ps ax | grep python 
+
 查看其他人在运行的代码。
 
 ---
@@ -921,10 +1189,12 @@ But failed!
 
 ---
 ### dos2unix
+
 因格式原因，有时候文件从windows复制到linux系统后执行会报错，比如代码文件中的回车空格等问题。先执行一句 `dos2unix(filename)` 即可.
 
 ---
 ### 安装MATLAB
+
 刚安装好时只能在MATLAB的安装路径内运行，即在`……/bin`内输入`./matlab`。要使在终端的任意路径下都可运行MTALAB，在`/usr/local/bin`里绑定一个软链接即可，即
 ```
 cd /usr/local/bin
@@ -953,12 +1223,14 @@ sudo ln -s ……/bin/matlab matlab
 
 ---
 ### rename
+
 将文件*中的from重命名为to:
 
 	rename 's/from/to/' *
 
 ---
 ### vim
+
 三种模式名字：命令行模式，插入模式，末行模式
 
 命令行模式中输入`:u`或`:undo`表示撤销。（注：命令行模式下输入`:`即进入了末行模式。）
@@ -997,6 +1269,7 @@ sudo ln -s ……/bin/matlab matlab
 
 ---
 ### ~/.vimrc
+
 	变量名          缩写                       含义
 	tabstop=X       ts          编辑时一个TAB字符占多少个空格的位置。 
 	(no)expandtab   (no)et      是否将输入的TAB自动展开成空格。开启后要输入TAB，需要Ctrl-V<TAB> 
@@ -1040,6 +1313,7 @@ autoindent 在这种缩进形式中，新增加的行和前一行使用相同的
 
 ---
 ### vim自动补全
+
 候选框挥之不去，很烦！
     
 	Ctrl+Y
@@ -1086,6 +1360,7 @@ autoindent 在这种缩进形式中，新增加的行和前一行使用相同的
 
 ---
 ### conda
+
 	conda create –n python3 python=3.5  (python3为自定义name，下同；3.5为指定python版本)	
 	conda activate python3
 	conda deactivate
@@ -1141,6 +1416,7 @@ pip是python自带的，而conda是安装anaconda或者miniconda提供的，俗�
 
 ---
 **记录一次pytorch指定版本安装过程**：
+
 安装 pytorch 1.1.0和 torchvision 0.3.0，服务器上cuda版本为10.1。
 
 参考官网推荐方式：
@@ -1173,6 +1449,7 @@ pip是python自带的，而conda是安装anaconda或者miniconda提供的，俗�
 
 ---
 ### slurm集群管理
+
 `srun`，`sbatch`和`salloc`为三大提交任务命令。`salloc`为交互式，任务结束后不一定及时释放资源，对于按时长收费的集群请慎重；个人喜欢用`srun`，其与`2>&1 |tee [log name]`配合，可以在写入文件的同时输出到屏幕上，甚是舒服；`sbatch` 虽然有`-o`命令表示输出文件，但使用该命令后不能输出到屏幕上。
 
 `srun`参数众多，如下列出其单字母简称和对应的全称：
@@ -1206,6 +1483,7 @@ srun --job-name=STL-train --gres=gpu:2 --qos low --time 120:00:00 python -u trai
 
 ---
 ### tmux
+
 注：集群上不同节点tmux已建session可能不同。
 
 重命名session:
@@ -1214,17 +1492,145 @@ srun --job-name=STL-train --gres=gpu:2 --qos low --time 120:00:00 python -u trai
 
 ---
 ### $PATH
+
 配置环境变量，需加入某个应用时，将相应bin文件的路径添加到 ~/.bashrc 文件中。如：
 
     export PATH="$PATH:/home/hongt/anaconda3/bin"
 
 其中`$PATH`即为已有的环境变量；务必使用双引号！
 
+--- 
+### CUDA配置
+
+安装好CUDA后在`~/.bashrc`中将其路径加入PATH，再source更新一下即可，`nvcc -V`便可看到所装版本。
+```
+export PATH=/usr/local/cuda-11.1/bin:$PATH
+export LD_LIBRARY_PATH=/usr/local/cuda-11.1/lib64:$LD_LIBRARY_PATH
+
+source ~/.bashrc 
+nvcc -V 
+```
+
+---
+# Git
+
+### push
+
+git 把本地分支dev推到远程，运行
+
+	git push origin dev
+
+即可，此时远程对应分支名字相同，也为dev。
+而如果想把本地分支推到远程新的分支上（名字也不相同），如命名为dev_new，只需：
+
+	git push origin dev:dev_new
+
+---
+### clone
+
+- git clone默认会把远程仓库整个给clone下来，但只会在本地默认创建一个master分支。如果远程还有其他的分支，此时用`git branch -a`查看所有分支，能看到远程的所有的分支，如remotes/origin/dev，可以使用checkout命令来把远程分支取到本地，并自动建立tracking：
+
+		git checkout -b dev origin/dev
+- git clone时也可 -b 参数只克隆指定分支，如只clone 远程的dev分支：
+
+		git clone -b dev [origin-url]
+- 而把远程分支拉取到本地时默认名字也相同，若想把远程dev分支拉到本地且命名为dev_new，只需
+
+		git checkout -b dev_new origin/dev
+参考：[git clone 某个分支或者所有分支](https://www.cnblogs.com/bluestorm/p/7380141.html)
+
+---
+### pull 
+
+pull 相当于先 fetch 再 merge。如`git pull` 等效于先执行 `git fetch origin [当前分支名]`, 再执行 `git merge FETCH_HEAD`.
+pull 虽然一步到位，但个人多数情况下偏向于后者，一来先 fetch 再借助 diff 命令可以看到远程与本地仓库的区别；二来当拉取时本地和远程有冲突时，也先有个准备。
+
+git fecth 有四种用法：
+- `git fetch`
+	这将更新git remote 中所有的远程repo 所包含分支的最新commit-id, 将其记录到.git/FETCH_HEAD文件中。
+- `git fetch [remote_repo]`         
+  	这将更新名称为remote_repo 的远程repo上的所有branch的最新commit-id，将其记录。 
+- `git fetch [remote_repo] [remote_branch_name]` 
+	这将这将更新名称为remote_repo 的远程repo上的分支： remote_branch_name。
+- `git fetch [remote_repo] [remote_branch_name]:[local_branch_name]`
+  	这将这将更新名称为remote_repo 的远程repo上的分支： remote_branch_name ，并在本地创建local_branch_name 本地分支保存远程分支的所有数据。
+
+举例说明：将远程origin仓库的xx分支合并到本地的yy分支，常见做法为：
+	
+	git fetch origin xx
+	git checkout yy
+	git merge FETCH_HEAD
+此时的MERGE_HEAD即指向origin/xx，若想合并其他远程分支当然也可，如想合并远程的dev分支到本地当前分支：`git merge origin/dev`。
+
+参考：[git fetch 、git pull、git merge 的理解](https://blog.csdn.net/Json159/article/details/82714784)
+
+---
+### diff
+
+常用于比较本地分支和对应远程分支的区别。可先更新下本地的远程分支：
+
+	git fetch origin
+
+- git log 输出本地与远程的差集（显示远程有而本地没有的commit信息），如比较master分支的区别：
+  	
+	 	git log master..origin/master
+
+- git diff 统计文件的改动，一般形式为：
+	
+		git diff [local_branch] [remote]/[remote_branch]
+  其中还有`--stat --cached --color`等参数来控制输出的详尽程度，`--stat`表示摘要，而`--cached`表示已缓存的改动。笔者一般会先加入`--stat`看一下diff的概括，若有需要再去掉`--stat`看详细区别，如：
+
+		git --stat diff dev origin/dev
+		git diff dev origin/dev
+
+参考：[git比较本地仓库和远程仓库的差异](https://blog.csdn.net/meng19910117/article/details/84402456)
+
+---
+### .gitignore
+
+有时候在项目开发过程中，突然心血来潮想把某些目录或文件加入忽略规则，按照上述方法定义后发现并未生效，原因是.gitignore只能忽略那些原来没有被track的文件，如果某些文件已经被纳入了版本管理中，则修改.gitignore是无效的。那么解决方法就是先把本地缓存删除（改变成未track状态），然后再提交。命令如下：
+
+	git rm -r --cached .
+	git add .
+	git commit -m "update .gitignore"
+
+文件.gitignore的格式规范：
+- #为注释
+- 可以使用shell所使用的正则表达式来进行模式匹配
+- 匹配模式最后跟"/"说明要忽略的是目录
+- 使用 ! 取反（例如目录中包含 test.a，并且gitignore文件中包含 *.[oa]，如果在文件中加入 !test.a 表明忽略除test.a文件以外的后缀名为.a或者.o的文件）
+
+配置语法：
+- 以斜杠“/”开头表示目录；
+- 以星号“*”通配多个字符；
+- 以问号“?”通配单个字符
+- 以方括号“[]”包含单个字符的匹配列表；
+- 以叹号“!”表示不忽略(跟踪)匹配到的文件或目录。
+
+例子：
+
+	*.a  # 忽略所有 .a 结尾的文件
+	!lib.a  # 但 lib.a 除外
+	/TODO  # 仅仅忽略项目根目录下的 TODO 文件，不包括 subdir/TODO
+	build/  # 忽略 build/ 目录下的所有文件
+	doc/*.txt  # 会忽略 doc/notes.txt 但不包括 doc/server/arch.txt
+
+此外，git 对于 .gitignore 配置文件是按行从上到下进行规则匹配的，意味着如果前面的规则匹配的范围更大，则后面的规则将不会生效。
+
+### commit
+
+如果commit注释写错了，只是想改一下注释，只需要：
+
+	git commit --amend
+
+此时会进入默认vim编辑器，修改注释完毕后保存就好了。
+
 ---
 
 # Mac
 
 ### 常用快捷键
+
 `command + shift + 4` 部分截屏
 `control + space` 切换输入法
 `control + command + A` QQ截屏
@@ -1233,6 +1639,7 @@ srun --job-name=STL-train --gres=gpu:2 --qos low --time 120:00:00 python -u trai
 ---
 
 ### 新建文件
+
 在终端输入：
 
     touch filename
@@ -1240,6 +1647,7 @@ srun --job-name=STL-train --gres=gpu:2 --qos low --time 120:00:00 python -u trai
 ---
 
 ### 隐藏文件
+
 查看隐藏文件：
 
     ls -la
@@ -1294,15 +1702,18 @@ code
 其二为在VSCODE中安装`Markdown+Math`插件。
 
 ### Markdown 图片
+
 插入GitHub上的图片预览不能显示时，把图片链接地址中的 `blob` 换成 `raw` 即可！
 
 ### Markdown 目录
+
 用VSCODE编译，将光标置入待插入位置，按`Ctrl+Shift+P`，在弹出框里输入`ctoc`即可。
 
 ---
 # LaTex
 
 ### VSCode 编译器
+
 `Ctrl + Alt + B ` 一次编译
 `Ctrl + Alt + R` 选择recipe，此时才能显示目录、摘要等。
 `Ctrl + Alt + J` 正向查找，即选中LaTex代码后按此快捷键可定位到PDF中的对应文本。
@@ -1311,6 +1722,7 @@ code
 [LaTeX技巧932：如何配置Visual Studio Code作为LaTeX编辑器[新版更新]](https://www.latexstudio.net/archives/12260.html)
 
 ### 一些符号代码
+
 `\pm` $\pm$
 `\equiv` $\equiv$
 `\approx` $\approx$
@@ -1323,8 +1735,20 @@ code
 # Others
 ### paper writing
 #### 插入图片
+
 一般插入eps或PDF格式图片，而将jpg、png等格式图片转化为eps格式可借助`bmeps`命令，在安装了Tex后已具有`bmeps`模块。在终端中采取如下命令即可（注意写对图片路径，Windows系统下在指定文件夹中按住Shift键再右键选择‘在此处打开pewershell窗口’即可）：
 `bmeps -c *.png *.eps`
+
+---
+### cmd 脚本
+
+Windows中的执行脚本后缀名为`.bat`，不同于Linux系统中的`.sh`。笔者经常需要借助cmd窗口ssh远程登录服务器，故写个脚本更为便捷。如新建个login.bat，在里面写入下行命令即可：
+
+	start cmd /c "ssh [username]@[IP-address]"
+
+其中`cmd /k`表示cmd后面的命令执行完后不关闭窗口；而`cmd /c`表示执行完cmd命令后关闭窗口。
+
+参考：[写一个打开cmd窗口并执行cmd命令的Windows脚本（.bat文件）](https://blog.csdn.net/weixin_46909756/article/details/108726489)
 
 ---
 ### USB失效
