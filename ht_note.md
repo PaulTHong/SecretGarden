@@ -67,6 +67,7 @@
 		- [os.path.dirname(\_\_file\_\_)](#ospathdirname__file__)
 		- [argparse](#argparse)
 			- [bool型argparse 坑](#bool型argparse-坑)
+		- [config](#config)
 		- [class](#class)
 		- [\_\_call\_\_()](#__call__)
 		- [\_\_dir\_\_()](#__dir__)
@@ -74,11 +75,16 @@
 		- [globals()](#globals)
 		- [zfill](#zfill)
 		- [ravel() & flatten()](#ravel--flatten)
+		- [不连续切片 take()](#不连续切片-take)
 		- [np.rollaxis（）](#nprollaxis)
 		- [matplotlib](#matplotlib)
 		- [plt.plot()](#pltplot)
-	- [opencv2](#opencv2)
+	- [## opencv2](#-opencv2)
+		- [opencv 安装](#opencv-安装)
 		- [resize](#resize)
+		- [颜色通道](#颜色通道)
+		- [imshow() 与 imwrite()](#imshow-与-imwrite)
+		- [PIL.Image](#pilimage)
 - [MATLAB](#matlab)
 		- [MATLAB bsxfun](#matlab-bsxfun)
 	- [Python 与 MATLAB的一些函数区别（细节）](#python-与-matlab的一些函数区别细节)
@@ -94,7 +100,7 @@
 		- [查看CPU GPU使用情况](#查看cpu-gpu使用情况)
 		- [输出机制](#输出机制)
 		- [export & echo](#export--echo)
-		- [tar](#tar)
+		- [文件压缩与解压](#文件压缩与解压)
 		- [scp](#scp)
 		- [Ctrl类快捷键](#ctrl类快捷键)
 		- [查看位置](#查看位置)
@@ -124,9 +130,11 @@
 		- [push](#push)
 		- [clone](#clone)
 		- [pull](#pull)
+		- [merge](#merge)
 		- [diff](#diff)
 		- [.gitignore](#gitignore)
 		- [commit](#commit)
+		- [reset](#reset)
 - [Mac](#mac)
 		- [常用快捷键](#常用快捷键)
 		- [新建文件](#新建文件)
@@ -141,12 +149,16 @@
 - [LaTex](#latex)
 		- [VSCode 编译器](#vscode-编译器)
 		- [一些符号代码](#一些符号代码)
+		- [Beamer 插入 logo](#beamer-插入-logo)
+		- [Beamer 插入 GIF](#beamer-插入-gif)
+		- [日期显示中文](#日期显示中文)
 - [Others](#others)
 		- [paper writing](#paper-writing)
 			- [插入图片](#插入图片)
 		- [cmd 脚本](#cmd-脚本)
+		- [Windows C盘空间不足](#windows-c盘空间不足)
+		- [Jupyter 浏览器访问失败](#jupyter-浏览器访问失败)
 		- [USB失效](#usb失效)
-		- [server config(~2020.12)](#server-config202012)
 
 <!-- /code_chunk_output -->
 
@@ -643,6 +655,11 @@ argparse有参数action, 取值有两种：
 参考：[https://stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse](https://stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse)
 
 ---
+### config
+很多代码库会通过`yacs`库来控制实验参数`config`。
+After `cfg.freeze()`, if you want to modfiy cfg, you have to `cfg.defrost()`。
+
+---
 ### class
 
 class里面有多个类的属性时，如多个全连接层fc1, fc2, fc3：
@@ -731,6 +748,13 @@ class里面有多个类的属性时，如多个全连接层fc1, fc2, fc3：
 	b is a    输出：False  
 	c = a.flatten()  
 	c is a    输出：False
+
+---
+### 不连续切片 take()
+```
+A = np.random.rand(5, 2, 2)
+B = A.take([0, 3, 4], 0)   #  B为矩阵A在第一个维度上只保留0、3和4索引的切片，shape为(3, 2, 2)
+```
 
 ---
 ### np.rollaxis（）
@@ -849,6 +873,11 @@ matplotlib经常用在python shell中用作交互式编程，也有将其作为�
 
 ---
 ## opencv2
+---
+### opencv 安装
+若通过conda安装失败时，可考虑直接通过pip安装。
+
+	pip install opencv-python
 
 ---
 ### resize
@@ -857,6 +886,7 @@ matplotlib经常用在python shell中用作交互式编程，也有将其作为�
 resize 为原来的 width 和 height 也还是有一点时间消耗的。
 
 ---
+### 颜色通道
 cv2读取图片默认为BGR模式，且`imshow`, `imwrite`也都对应BGR模式！  
 **BGR->RGB**:
 
@@ -877,9 +907,13 @@ cv2读取图片默认为BGR模式，且`imshow`, `imwrite`也都对应BGR模式�
 而cv2的 `imread` 函数读取方式参数有 `cv2.IMREAD_COLOR, cv2.IMREAD_UNCHANGED, cv2.IMREAD_GRAYSCALE` 等，默认即为 `cv2.IMREAD_COLOR`，会自动得到三通道图。
 
 ---
-
+### imshow() 与 imwrite()
 像素取值为0~255时， `cv2.imshow()`函数的参数矩阵元素必须为整数，一般取`np.uint8`型。
 但`cv2.imwrite()`存图时参数可以不为整数，相反取整之后可能存在一定的色彩失真（若肉眼能观察到）。
+
+---
+### PIL.Image
+PIL.Image 读取图片的大小, resize时的大小，都是先宽W再高H。
 
 ---
 # MATLAB
@@ -994,9 +1028,14 @@ ls隐藏pyc文件，可写在`~/.bashrc`中：
 
 	nvidia-smi
 
-动态查看GPU，时间间隔为0.5
+动态查看GPU，时间间隔为0.5，默认为1
   
 	watch -n 0.5 nvidia-smi
+
+`gpustat`查看，-c选项为显示进程名，-p选项为显示进程PID
+
+	gpustat -cp -i 1
+
 
 查看CPU（按`q`退出）
 
@@ -1056,7 +1095,8 @@ case3:
 若想一直生效，写进`~/.bashrc`即可。
 
 ---
-### tar
+### 文件压缩与解压
+**tar**
 
 	-c: create, 建立压缩档案
 	-x：解压
@@ -1100,6 +1140,11 @@ case3:
 
 注：若压缩时想排除一些文件或文件夹，可借助`--exclude`参数，排除多个文件(夹)时则使用多次`--exclude`，另排除的文件夹最后不要加`/`。例如：
 `tar -czvf ht.tar.gz images --exclude=1.png --exclude=images/monkey`
+
+**zip**
+zip压缩文件夹：	
+	
+	zip -r [filename].zip [dirname]/
 
 ---
 ### scp
@@ -1489,11 +1534,18 @@ srun --job-name=STL-train --gres=gpu:2 --qos low --time 120:00:00 python -u trai
 ---
 ### tmux
 
-注：集群上不同节点tmux已建session可能不同。
+- 更改tmux配置`~/.tmux.conf`后，重启tmux生效，或者先按前缀键，默认为`Ctrl+b`，然后输入`:`，进入命令行模式，在命令行模式下输入：
+	
+		source-file ~/.tmux.conf
 
-重命名session:
+- 重命名session:
 
     tmux rename-session -t [old-name] [new-name]
+
+	注：集群上不同节点tmux已建session可能不同。	
+- 防止清理缓存（一般都没必要）：
+	`-L` 指定socket名（默认`default`）和 `-S` 指定socket路径 (默认path为`/tmp/default`)。此后在tmux的各种命令中，紧接着tmux加入`-S [path]`即可。
+
 
 ---
 ### $PATH
@@ -1570,6 +1622,44 @@ git fecth 有四种用法：
 参考：[git fetch 、git pull、git merge 的理解](https://blog.csdn.net/Json159/article/details/82714784)
 
 ---
+Git删除本地分支以及重新拉取远程分支到本地。
+一.删除本地分支，如dev
+1.首先切换到本地一个其他的分支，这里我切换到本地master
+
+	git checkout master
+
+2.删除本地分支dev
+
+	git branch -D dev
+
+二.重新拉取远程分支dev到本地
+
+1.还是在master分支下进行操作，拉取远程分支dev到本地
+
+	git fetch origin dev
+
+2.还是在master分支下进行操作，在本地新建dev分支
+
+	git checkout -b dev origin/dev
+
+3.切换到本地dev分支，把dev所有内容拉取到本地
+
+	git pull origin dev
+实际上上述第3小步可省略。
+
+---
+### merge
+有时候因为一些差异等，导致merge报错：
+	
+	fatal: refusing to merge unrelated histories：
+
+此时添加一个参数`--allow-unrelated-histories`即可，如
+
+	git merge master --allow-unrelated-histories
+
+参考：[解决Git中fatal: refusing to merge unrelated histories](https://developer.aliyun.com/article/614459)
+
+---
 ### diff
 
 常用于比较本地分支和对应远程分支的区别。可先更新下本地的远程分支：
@@ -1585,8 +1675,12 @@ git fecth 有四种用法：
 		git diff [local_branch] [remote]/[remote_branch]
   其中还有`--stat --cached --color`等参数来控制输出的详尽程度，`--stat`表示摘要，而`--cached`表示已缓存的改动。笔者一般会先加入`--stat`看一下diff的概括，若有需要再去掉`--stat`看详细区别，如：
 
-		git --stat diff dev origin/dev
+		git diff --stat dev origin/dev
 		git diff dev origin/dev
+
+	其实上面比较的两个分支，也不必局限于一个本地分支和一个远程分支，任意两个都可比较。另若想比较指定文件的差异，在最后添加`-- [filename]`即可，且可同时比较多个，如
+
+		git diff master dev -- READMD.md index.php
 
 参考：[git比较本地仓库和远程仓库的差异](https://blog.csdn.net/meng19910117/article/details/84402456)
 
@@ -1622,6 +1716,11 @@ git fecth 有四种用法：
 
 此外，git 对于 .gitignore 配置文件是按行从上到下进行规则匹配的，意味着如果前面的规则匹配的范围更大，则后面的规则将不会生效。
 
+忽略已被track的文件：
+	
+	git rm -r --cached .
+当想指定文件时，将上面的`.`改成指定的文件路径名即可。
+
 ### commit
 
 如果commit注释写错了，只是想改一下注释，只需要：
@@ -1629,6 +1728,15 @@ git fecth 有四种用法：
 	git commit --amend
 
 此时会进入默认vim编辑器，修改注释完毕后保存就好了。
+
+### reset
+先通过
+
+	git log --pretty=oneline 
+查找到各次commit的序号，然后 
+	
+	git reset --hard [commit-id] 
+即可退回到该版本。可适用于添加了大文件想撤回等情况。但`hard`有风险，使用需谨慎。
 
 ---
 
@@ -1737,6 +1845,67 @@ code
 `\raggedright` 两端对齐
 
 ---
+### Beamer 插入 logo
+查到方式有四，推荐第三种。
+1. 普通插入，即在`\author`，`\institute`等位置`\includegraphics`即可。
+2. 在封面页使用`\titlegraphic`命令，logo位于最下面一行，与日期	等垂直投影无交叉，默认居中。可借助`\hspace`和`\vspace`来调节位置，如下例中的-10cm表示右移10cm
+	```
+	\titlegraphic{\includegraphics[width=1.6cm]{images/pku_logo.png}\hspace*{-10cm}}
+	```
+3. `\logo`命令
+	```
+	\logo{\includegraphics[height=0.07\textwidth]{images/pku_logo.png}}
+	```
+	调整位置与`\titlegraphic`类似，默认在右下角。另要想控制logo在某些页出现，某些页不出现，只需要在相应的页的`\begin{frame}`前一行写入`\logo{}`命令，若该页不需要logo, 取空`\logo{}`即可。
+	注：此命令貌似要`\usepackage{tikz}`。
+4. 复杂一些，`\MyLogo`使用`\usepackage{fancyhdr}`库控制页眉页脚，常见于article等格式。
+	```
+	\fancyhf{}
+	\fancyfoot[R]{
+		\begin{minipage}[c]{0.06\textwidth}
+			\includegraphics[height=7.5mm]{images/pku_logo.png}
+		\end{minipage}}
+	% \pagestyle{fancy}
+	```
+可参考：[如何让Beamer的logo放在右上角](http://www.mamicode.com/info-detail-1368899.html)
+
+总参考：[beamer模板设计（七）titlepage、logo和目录页](https://zhuanlan.zhihu.com/p/137427360)
+
+举例：
+```
+\logo{\includegraphics[height=0.15\textwidth]{images/pku_logo.png}}
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\logo{\includegraphics[height=0.07\textwidth]{images/pku_logo.png}}
+\begin{frame}{Frame Title}
+  Frame Content...
+\end{frame}
+
+\logo{}
+\begin{frame}{}
+\end{frame}
+```
+三页的logo依次为大、小、无。
+
+---
+### Beamer 插入 GIF
+```
+\usepackage{animate}
+\begin{figure}
+	\centering
+	\animategraphics[height=0.3\textwidth,loop,autoplay]{3}{image_path_dir/image_name_prefix}{1}{7}
+\end{figure}
+```
+其中3为帧率，1-7为图片编号，image_name_prefix表示图片除了编号外的前缀名，比如图片为see_1.eps，则该项为see_1。
+
+---
+### 日期显示中文
+
+	\renewcommand{\today}{\number\year 年\number\month 月\number\day 日}
+
+---
 # Others
 ### paper writing
 #### 插入图片
@@ -1756,6 +1925,21 @@ Windows中的执行脚本后缀名为`.bat`，不同于Linux系统中的`.sh`。
 参考：[写一个打开cmd窗口并执行cmd命令的Windows脚本（.bat文件）](https://blog.csdn.net/weixin_46909756/article/details/108726489)
 
 ---
+### Windows C盘空间不足
+删除系统还原点
+移动搜索映射
+移动Temp文件
+
+---
+### Jupyter 浏览器访问失败
+如果访问失败了，则有可能是服务器防火墙设置的问题，此时最简单的方法是在本地建立一个 ssh 通道：
+在本地终端中输入
+	
+	ssh [server-name]@[server-ip] -L 127.0.0.1:1234:127.0.0.1:8888
+便可以在`localhost:1234`直接访问远程的jupyter notebook了。
+
+
+---
 ### USB失效
 
 笔者有一天打开电脑（Windows系统）突然发现所有的USB接口都失效了，导致外接鼠标键盘都失效，插入U盘也读取不了。网上搜了很多教程都不管用，一类方法为电脑在节电模式下会禁用外接USB口等，所以需关闭这些设置，还有卸载USB驱动再重装等（可借助驱动精灵等软件），笔者试了均无果。
@@ -1766,19 +1950,5 @@ Windows中的执行脚本后缀名为`.bat`，不同于Linux系统中的`.sh`。
 
 另很多电脑F1~12键都有另一种对应的功能，如F3除了传统的功能外还可增大音量，默认的是传统功能时要增大音量就得按住`fn`键再按F3了。在BIOS模式的`POST Behavior`里有一栏`Fn lock`的`Lock Mode`，其有`Lock Mode Standard`和`Lock Mode Secondary`，选择一个即可。笔者习惯选择后者，即F3默认为增大音量。
 
----
-### server config(~2020.12)
 
-weiming1：
-python3.6.2
-torch   0.4.0
-torchvision   0.2.1
-cv2   3.1.0
-
-PKU163:
-Python3.5.2
-torch   0.4.1
-torchvision   0.2.1
-cv2   3.3.0
-tensorflow   1.4.0
 

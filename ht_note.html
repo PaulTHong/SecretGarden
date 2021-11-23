@@ -3,7 +3,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       
-      <link rel="stylesheet" href="file:///c:\Users\paul.ht\.vscode\extensions\shd101wyy.markdown-preview-enhanced-0.5.17\node_modules\@shd101wyy\mume\dependencies\katex\katex.min.css">
+      <link rel="stylesheet" href="file:///D:\VSCode\Extensions\shd101wyy.markdown-preview-enhanced-0.6.1\node_modules\@shd101wyy\mume\dependencies\katex\katex.min.css">
       
       
       
@@ -336,6 +336,7 @@ pre[data-line] .line-highlight[data-end]:after {
 <li><a href="#bool%E5%9E%8Bargparse-%E5%9D%91">bool&#x578B;argparse &#x5751;</a></li>
 </ul>
 </li>
+<li><a href="#config">config</a></li>
 <li><a href="#class">class</a></li>
 <li><a href="#__call__">__call__()</a></li>
 <li><a href="#__dir__">__dir__()</a></li>
@@ -343,14 +344,19 @@ pre[data-line] .line-highlight[data-end]:after {
 <li><a href="#globals">globals()</a></li>
 <li><a href="#zfill">zfill</a></li>
 <li><a href="#ravel--flatten">ravel() &amp; flatten()</a></li>
+<li><a href="#%E4%B8%8D%E8%BF%9E%E7%BB%AD%E5%88%87%E7%89%87-take">&#x4E0D;&#x8FDE;&#x7EED;&#x5207;&#x7247; take()</a></li>
 <li><a href="#nprollaxis">np.rollaxis&#xFF08;&#xFF09;</a></li>
 <li><a href="#matplotlib">matplotlib</a></li>
 <li><a href="#pltplot">plt.plot()</a></li>
 </ul>
 </li>
-<li><a href="#opencv2">opencv2</a>
+<li><a href="#-opencv2">## opencv2</a>
 <ul>
+<li><a href="#opencv-%E5%AE%89%E8%A3%85">opencv &#x5B89;&#x88C5;</a></li>
 <li><a href="#resize">resize</a></li>
+<li><a href="#%E9%A2%9C%E8%89%B2%E9%80%9A%E9%81%93">&#x989C;&#x8272;&#x901A;&#x9053;</a></li>
+<li><a href="#imshow-%E4%B8%8E-imwrite">imshow() &#x4E0E; imwrite()</a></li>
+<li><a href="#pilimage">PIL.Image</a></li>
 </ul>
 </li>
 </ul>
@@ -376,7 +382,7 @@ pre[data-line] .line-highlight[data-end]:after {
 - <a href="#%E6%9F%A5%E7%9C%8Bcpu-gpu%E4%BD%BF%E7%94%A8%E6%83%85%E5%86%B5">&#x67E5;&#x770B;CPU GPU&#x4F7F;&#x7528;&#x60C5;&#x51B5;</a><br>
 - <a href="#%E8%BE%93%E5%87%BA%E6%9C%BA%E5%88%B6">&#x8F93;&#x51FA;&#x673A;&#x5236;</a><br>
 - <a href="#export--echo">export &amp; echo</a><br>
-- <a href="#tar">tar</a><br>
+- <a href="#%E6%96%87%E4%BB%B6%E5%8E%8B%E7%BC%A9%E4%B8%8E%E8%A7%A3%E5%8E%8B">&#x6587;&#x4EF6;&#x538B;&#x7F29;&#x4E0E;&#x89E3;&#x538B;</a><br>
 - <a href="#scp">scp</a><br>
 - <a href="#ctrl%E7%B1%BB%E5%BF%AB%E6%8D%B7%E9%94%AE">Ctrl&#x7C7B;&#x5FEB;&#x6377;&#x952E;</a><br>
 - <a href="#%E6%9F%A5%E7%9C%8B%E4%BD%8D%E7%BD%AE">&#x67E5;&#x770B;&#x4F4D;&#x7F6E;</a><br>
@@ -406,9 +412,11 @@ pre[data-line] .line-highlight[data-end]:after {
 - <a href="#push">push</a><br>
 - <a href="#clone">clone</a><br>
 - <a href="#pull">pull</a><br>
+- <a href="#merge">merge</a><br>
 - <a href="#diff">diff</a><br>
 - <a href="#gitignore">.gitignore</a><br>
-- <a href="#commit">commit</a></li>
+- <a href="#commit">commit</a><br>
+- <a href="#reset">reset</a></li>
 <li><a href="#mac">Mac</a><br>
 - <a href="#%E5%B8%B8%E7%94%A8%E5%BF%AB%E6%8D%B7%E9%94%AE">&#x5E38;&#x7528;&#x5FEB;&#x6377;&#x952E;</a><br>
 - <a href="#%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6">&#x65B0;&#x5EFA;&#x6587;&#x4EF6;</a><br>
@@ -422,13 +430,17 @@ pre[data-line] .line-highlight[data-end]:after {
 - <a href="#markdown-%E7%9B%AE%E5%BD%95">Markdown &#x76EE;&#x5F55;</a></li>
 <li><a href="#latex">LaTex</a><br>
 - <a href="#vscode-%E7%BC%96%E8%AF%91%E5%99%A8">VSCode &#x7F16;&#x8BD1;&#x5668;</a><br>
-- <a href="#%E4%B8%80%E4%BA%9B%E7%AC%A6%E5%8F%B7%E4%BB%A3%E7%A0%81">&#x4E00;&#x4E9B;&#x7B26;&#x53F7;&#x4EE3;&#x7801;</a></li>
+- <a href="#%E4%B8%80%E4%BA%9B%E7%AC%A6%E5%8F%B7%E4%BB%A3%E7%A0%81">&#x4E00;&#x4E9B;&#x7B26;&#x53F7;&#x4EE3;&#x7801;</a><br>
+- <a href="#beamer-%E6%8F%92%E5%85%A5-logo">Beamer &#x63D2;&#x5165; logo</a><br>
+- <a href="#beamer-%E6%8F%92%E5%85%A5-gif">Beamer &#x63D2;&#x5165; GIF</a><br>
+- <a href="#%E6%97%A5%E6%9C%9F%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87">&#x65E5;&#x671F;&#x663E;&#x793A;&#x4E2D;&#x6587;</a></li>
 <li><a href="#others">Others</a><br>
 - <a href="#paper-writing">paper writing</a><br>
 - <a href="#%E6%8F%92%E5%85%A5%E5%9B%BE%E7%89%87">&#x63D2;&#x5165;&#x56FE;&#x7247;</a><br>
 - <a href="#cmd-%E8%84%9A%E6%9C%AC">cmd &#x811A;&#x672C;</a><br>
-- <a href="#usb%E5%A4%B1%E6%95%88">USB&#x5931;&#x6548;</a><br>
-- <a href="#server-config202012">server config(~2020.12)</a></li>
+- <a href="#windows-c%E7%9B%98%E7%A9%BA%E9%97%B4%E4%B8%8D%E8%B6%B3">Windows C&#x76D8;&#x7A7A;&#x95F4;&#x4E0D;&#x8DB3;</a><br>
+- <a href="#jupyter-%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BF%E9%97%AE%E5%A4%B1%E8%B4%A5">Jupyter &#x6D4F;&#x89C8;&#x5668;&#x8BBF;&#x95EE;&#x5931;&#x8D25;</a><br>
+- <a href="#usb%E5%A4%B1%E6%95%88">USB&#x5931;&#x6548;</a></li>
 </ul>
 <hr>
 <h1 class="mume-header" id="python">Python</h1>
@@ -829,6 +841,11 @@ action=&apos;store_false&apos;
 <code>action=&apos;store_true&apos;</code>&#x5206;&#x6790;&#x540C;&#x7406;&#x3002;</p>
 <p>&#x53C2;&#x8003;&#xFF1A;<a href="https://stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse">https://stackoverflow.com/questions/15008758/parsing-boolean-values-with-argparse</a></p>
 <hr>
+<h3 class="mume-header" id="config">config</h3>
+
+<p>&#x5F88;&#x591A;&#x4EE3;&#x7801;&#x5E93;&#x4F1A;&#x901A;&#x8FC7;<code>yacs</code>&#x5E93;&#x6765;&#x63A7;&#x5236;&#x5B9E;&#x9A8C;&#x53C2;&#x6570;<code>config</code>&#x3002;<br>
+After <code>cfg.freeze()</code>, if you want to modfiy cfg, you have to <code>cfg.defrost()</code>&#x3002;</p>
+<hr>
 <h3 class="mume-header" id="class">class</h3>
 
 <p>class&#x91CC;&#x9762;&#x6709;&#x591A;&#x4E2A;&#x7C7B;&#x7684;&#x5C5E;&#x6027;&#x65F6;&#xFF0C;&#x5982;&#x591A;&#x4E2A;&#x5168;&#x8FDE;&#x63A5;&#x5C42;fc1, fc2, fc3&#xFF1A;</p>
@@ -916,6 +933,11 @@ c = a.flatten()
 c is a    &#x8F93;&#x51FA;&#xFF1A;False
 </pre>
 <hr>
+<h3 class="mume-header" id="%E4%B8%8D%E8%BF%9E%E7%BB%AD%E5%88%87%E7%89%87-take">&#x4E0D;&#x8FDE;&#x7EED;&#x5207;&#x7247; take()</h3>
+
+<pre data-role="codeBlock" data-info class="language-"><code>A = np.random.rand(5, 2, 2)
+B = A.take([0, 3, 4], 0)   #  B&#x4E3A;&#x77E9;&#x9635;A&#x5728;&#x7B2C;&#x4E00;&#x4E2A;&#x7EF4;&#x5EA6;&#x4E0A;&#x53EA;&#x4FDD;&#x7559;0&#x3001;3&#x548C;4&#x7D22;&#x5F15;&#x7684;&#x5207;&#x7247;&#xFF0C;shape&#x4E3A;(3, 2, 2)
+</code></pre><hr>
 <h3 class="mume-header" id="nprollaxis">np.rollaxis&#xFF08;&#xFF09;</h3>
 
 <p>&#x6539;&#x53D8;&#x7EF4;&#x5EA6;&#x987A;&#x5E8F;&#x3002;</p>
@@ -1024,11 +1046,19 @@ plt.ylim(57.5, 76.5)
 <h2 class="mume-header" id="opencv2">opencv2</h2>
 
 <hr>
+<h3 class="mume-header" id="opencv-%E5%AE%89%E8%A3%85">opencv &#x5B89;&#x88C5;</h3>
+
+<p>&#x82E5;&#x901A;&#x8FC7;conda&#x5B89;&#x88C5;&#x5931;&#x8D25;&#x65F6;&#xFF0C;&#x53EF;&#x8003;&#x8651;&#x76F4;&#x63A5;&#x901A;&#x8FC7;pip&#x5B89;&#x88C5;&#x3002;</p>
+<pre class="language-text">pip install opencv-python
+</pre>
+<hr>
 <h3 class="mume-header" id="resize">resize</h3>
 
 <p>&#x5148;&#x5BBD;&#x518D;&#x9AD8;&#xFF01;<br>
 resize &#x4E3A;&#x539F;&#x6765;&#x7684; width &#x548C; height &#x4E5F;&#x8FD8;&#x662F;&#x6709;&#x4E00;&#x70B9;&#x65F6;&#x95F4;&#x6D88;&#x8017;&#x7684;&#x3002;</p>
 <hr>
+<h3 class="mume-header" id="%E9%A2%9C%E8%89%B2%E9%80%9A%E9%81%93">&#x989C;&#x8272;&#x901A;&#x9053;</h3>
+
 <p>cv2&#x8BFB;&#x53D6;&#x56FE;&#x7247;&#x9ED8;&#x8BA4;&#x4E3A;BGR&#x6A21;&#x5F0F;&#xFF0C;&#x4E14;<code>imshow</code>, <code>imwrite</code>&#x4E5F;&#x90FD;&#x5BF9;&#x5E94;BGR&#x6A21;&#x5F0F;&#xFF01;<br>
 <strong>BGR-&gt;RGB</strong>:</p>
 <pre class="language-text">img_rgb = img[:, :, ::-1]  
@@ -1045,8 +1075,14 @@ img_rgb = cv2.merge([r, g, b])
 </pre>
 <p>&#x800C;cv2&#x7684; <code>imread</code> &#x51FD;&#x6570;&#x8BFB;&#x53D6;&#x65B9;&#x5F0F;&#x53C2;&#x6570;&#x6709; <code>cv2.IMREAD_COLOR, cv2.IMREAD_UNCHANGED, cv2.IMREAD_GRAYSCALE</code> &#x7B49;&#xFF0C;&#x9ED8;&#x8BA4;&#x5373;&#x4E3A; <code>cv2.IMREAD_COLOR</code>&#xFF0C;&#x4F1A;&#x81EA;&#x52A8;&#x5F97;&#x5230;&#x4E09;&#x901A;&#x9053;&#x56FE;&#x3002;</p>
 <hr>
+<h3 class="mume-header" id="imshow-%E4%B8%8E-imwrite">imshow() &#x4E0E; imwrite()</h3>
+
 <p>&#x50CF;&#x7D20;&#x53D6;&#x503C;&#x4E3A;0~255&#x65F6;&#xFF0C; <code>cv2.imshow()</code>&#x51FD;&#x6570;&#x7684;&#x53C2;&#x6570;&#x77E9;&#x9635;&#x5143;&#x7D20;&#x5FC5;&#x987B;&#x4E3A;&#x6574;&#x6570;&#xFF0C;&#x4E00;&#x822C;&#x53D6;<code>np.uint8</code>&#x578B;&#x3002;<br>
 &#x4F46;<code>cv2.imwrite()</code>&#x5B58;&#x56FE;&#x65F6;&#x53C2;&#x6570;&#x53EF;&#x4EE5;&#x4E0D;&#x4E3A;&#x6574;&#x6570;&#xFF0C;&#x76F8;&#x53CD;&#x53D6;&#x6574;&#x4E4B;&#x540E;&#x53EF;&#x80FD;&#x5B58;&#x5728;&#x4E00;&#x5B9A;&#x7684;&#x8272;&#x5F69;&#x5931;&#x771F;&#xFF08;&#x82E5;&#x8089;&#x773C;&#x80FD;&#x89C2;&#x5BDF;&#x5230;&#xFF09;&#x3002;</p>
+<hr>
+<h3 class="mume-header" id="pilimage">PIL.Image</h3>
+
+<p>PIL.Image &#x8BFB;&#x53D6;&#x56FE;&#x7247;&#x7684;&#x5927;&#x5C0F;, resize&#x65F6;&#x7684;&#x5927;&#x5C0F;&#xFF0C;&#x90FD;&#x662F;&#x5148;&#x5BBD;W&#x518D;&#x9AD8;H&#x3002;</p>
 <hr>
 <h1 class="mume-header" id="matlab">MATLAB</h1>
 
@@ -1134,8 +1170,11 @@ shell&#x5F00;&#x5934;&#x5199;</p>
 <p>&#x67E5;&#x770B;GPU</p>
 <pre class="language-text">nvidia-smi
 </pre>
-<p>&#x52A8;&#x6001;&#x67E5;&#x770B;GPU&#xFF0C;&#x65F6;&#x95F4;&#x95F4;&#x9694;&#x4E3A;0.5</p>
+<p>&#x52A8;&#x6001;&#x67E5;&#x770B;GPU&#xFF0C;&#x65F6;&#x95F4;&#x95F4;&#x9694;&#x4E3A;0.5&#xFF0C;&#x9ED8;&#x8BA4;&#x4E3A;1</p>
 <pre class="language-text">watch -n 0.5 nvidia-smi
+</pre>
+<p><code>gpustat</code>&#x67E5;&#x770B;&#xFF0C;-c&#x9009;&#x9879;&#x4E3A;&#x663E;&#x793A;&#x8FDB;&#x7A0B;&#x540D;&#xFF0C;-p&#x9009;&#x9879;&#x4E3A;&#x663E;&#x793A;&#x8FDB;&#x7A0B;PID</p>
+<pre class="language-text">gpustat -cp -i 1
 </pre>
 <p>&#x67E5;&#x770B;CPU&#xFF08;&#x6309;<code>q</code>&#x9000;&#x51FA;&#xFF09;</p>
 <pre class="language-text">top
@@ -1184,8 +1223,9 @@ case3:<br>
 &#x5E94;&#x5728;&#x4E3B;&#x51FD;&#x6570;&#x5F00;&#x5934;&#x4FBF;&#x5199;&#x597D; <code>export CUDA_HOME=...</code> &#x7B49;&#xFF1B;<br>
 &#x82E5;&#x60F3;&#x4E00;&#x76F4;&#x751F;&#x6548;&#xFF0C;&#x5199;&#x8FDB;<code>~/.bashrc</code>&#x5373;&#x53EF;&#x3002;</p>
 <hr>
-<h3 class="mume-header" id="tar">tar</h3>
+<h3 class="mume-header" id="%E6%96%87%E4%BB%B6%E5%8E%8B%E7%BC%A9%E4%B8%8E%E8%A7%A3%E5%8E%8B">&#x6587;&#x4EF6;&#x538B;&#x7F29;&#x4E0E;&#x89E3;&#x538B;</h3>
 
+<p><strong>tar</strong></p>
 <pre class="language-text">-c: create, &#x5EFA;&#x7ACB;&#x538B;&#x7F29;&#x6863;&#x6848;
 -x&#xFF1A;&#x89E3;&#x538B;
 -z&#xFF0C;-j&#xFF1A;&#x5206;&#x522B;&#x8868;&#x793A;&#x4EE5;gzip&#x548C;bzip2&#x683C;&#x5F0F;&#x538B;&#x7F29;&#x89E3;&#x538B;
@@ -1226,6 +1266,10 @@ zip jpg.zip *.jpg //zip&#x683C;&#x5F0F;&#x7684;&#x538B;&#x7F29;&#xFF0C;&#x9700;&
 </pre>
 <p>&#x6CE8;&#xFF1A;&#x82E5;&#x538B;&#x7F29;&#x65F6;&#x60F3;&#x6392;&#x9664;&#x4E00;&#x4E9B;&#x6587;&#x4EF6;&#x6216;&#x6587;&#x4EF6;&#x5939;&#xFF0C;&#x53EF;&#x501F;&#x52A9;<code>--exclude</code>&#x53C2;&#x6570;&#xFF0C;&#x6392;&#x9664;&#x591A;&#x4E2A;&#x6587;&#x4EF6;(&#x5939;)&#x65F6;&#x5219;&#x4F7F;&#x7528;&#x591A;&#x6B21;<code>--exclude</code>&#xFF0C;&#x53E6;&#x6392;&#x9664;&#x7684;&#x6587;&#x4EF6;&#x5939;&#x6700;&#x540E;&#x4E0D;&#x8981;&#x52A0;<code>/</code>&#x3002;&#x4F8B;&#x5982;&#xFF1A;<br>
 <code>tar -czvf ht.tar.gz images --exclude=1.png --exclude=images/monkey</code></p>
+<p><strong>zip</strong><br>
+zip&#x538B;&#x7F29;&#x6587;&#x4EF6;&#x5939;&#xFF1A;</p>
+<pre class="language-text">zip -r [filename].zip [dirname]/
+</pre>
 <hr>
 <h3 class="mume-header" id="scp">scp</h3>
 
@@ -1543,10 +1587,22 @@ alias python=&apos;/usr/bin/python3.5&apos;
 <hr>
 <h3 class="mume-header" id="tmux">tmux</h3>
 
-<p>&#x6CE8;&#xFF1A;&#x96C6;&#x7FA4;&#x4E0A;&#x4E0D;&#x540C;&#x8282;&#x70B9;tmux&#x5DF2;&#x5EFA;session&#x53EF;&#x80FD;&#x4E0D;&#x540C;&#x3002;</p>
-<p>&#x91CD;&#x547D;&#x540D;session:</p>
-<pre class="language-text">tmux rename-session -t [old-name] [new-name]
+<ul>
+<li>
+<p>&#x66F4;&#x6539;tmux&#x914D;&#x7F6E;<code>~/.tmux.conf</code>&#x540E;&#xFF0C;&#x91CD;&#x542F;tmux&#x751F;&#x6548;&#xFF0C;&#x6216;&#x8005;&#x5148;&#x6309;&#x524D;&#x7F00;&#x952E;&#xFF0C;&#x9ED8;&#x8BA4;&#x4E3A;<code>Ctrl+b</code>&#xFF0C;&#x7136;&#x540E;&#x8F93;&#x5165;<code>:</code>&#xFF0C;&#x8FDB;&#x5165;&#x547D;&#x4EE4;&#x884C;&#x6A21;&#x5F0F;&#xFF0C;&#x5728;&#x547D;&#x4EE4;&#x884C;&#x6A21;&#x5F0F;&#x4E0B;&#x8F93;&#x5165;&#xFF1A;</p>
+<pre class="language-text">  source-file ~/.tmux.conf
 </pre>
+</li>
+<li>
+<p>&#x91CD;&#x547D;&#x540D;session:</p>
+<p>tmux rename-session -t [old-name] [new-name]</p>
+<p>&#x6CE8;&#xFF1A;&#x96C6;&#x7FA4;&#x4E0A;&#x4E0D;&#x540C;&#x8282;&#x70B9;tmux&#x5DF2;&#x5EFA;session&#x53EF;&#x80FD;&#x4E0D;&#x540C;&#x3002;</p>
+</li>
+<li>
+<p>&#x9632;&#x6B62;&#x6E05;&#x7406;&#x7F13;&#x5B58;&#xFF08;&#x4E00;&#x822C;&#x90FD;&#x6CA1;&#x5FC5;&#x8981;&#xFF09;&#xFF1A;<br>
+<code>-L</code> &#x6307;&#x5B9A;socket&#x540D;&#xFF08;&#x9ED8;&#x8BA4;<code>default</code>&#xFF09;&#x548C; <code>-S</code> &#x6307;&#x5B9A;socket&#x8DEF;&#x5F84; (&#x9ED8;&#x8BA4;path&#x4E3A;<code>/tmp/default</code>)&#x3002;&#x6B64;&#x540E;&#x5728;tmux&#x7684;&#x5404;&#x79CD;&#x547D;&#x4EE4;&#x4E2D;&#xFF0C;&#x7D27;&#x63A5;&#x7740;tmux&#x52A0;&#x5165;<code>-S [path]</code>&#x5373;&#x53EF;&#x3002;</p>
+</li>
+</ul>
 <hr>
 <h3 class="mume-header" id="path">$PATH</h3>
 
@@ -1620,6 +1676,36 @@ git merge FETCH_HEAD
 <p>&#x6B64;&#x65F6;&#x7684;MERGE_HEAD&#x5373;&#x6307;&#x5411;origin/xx&#xFF0C;&#x82E5;&#x60F3;&#x5408;&#x5E76;&#x5176;&#x4ED6;&#x8FDC;&#x7A0B;&#x5206;&#x652F;&#x5F53;&#x7136;&#x4E5F;&#x53EF;&#xFF0C;&#x5982;&#x60F3;&#x5408;&#x5E76;&#x8FDC;&#x7A0B;&#x7684;dev&#x5206;&#x652F;&#x5230;&#x672C;&#x5730;&#x5F53;&#x524D;&#x5206;&#x652F;&#xFF1A;<code>git merge origin/dev</code>&#x3002;</p>
 <p>&#x53C2;&#x8003;&#xFF1A;<a href="https://blog.csdn.net/Json159/article/details/82714784">git fetch &#x3001;git pull&#x3001;git merge &#x7684;&#x7406;&#x89E3;</a></p>
 <hr>
+<p>Git&#x5220;&#x9664;&#x672C;&#x5730;&#x5206;&#x652F;&#x4EE5;&#x53CA;&#x91CD;&#x65B0;&#x62C9;&#x53D6;&#x8FDC;&#x7A0B;&#x5206;&#x652F;&#x5230;&#x672C;&#x5730;&#x3002;<br>
+&#x4E00;.&#x5220;&#x9664;&#x672C;&#x5730;&#x5206;&#x652F;&#xFF0C;&#x5982;dev<br>
+1.&#x9996;&#x5148;&#x5207;&#x6362;&#x5230;&#x672C;&#x5730;&#x4E00;&#x4E2A;&#x5176;&#x4ED6;&#x7684;&#x5206;&#x652F;&#xFF0C;&#x8FD9;&#x91CC;&#x6211;&#x5207;&#x6362;&#x5230;&#x672C;&#x5730;master</p>
+<pre class="language-text">git checkout master
+</pre>
+<p>2.&#x5220;&#x9664;&#x672C;&#x5730;&#x5206;&#x652F;dev</p>
+<pre class="language-text">git branch -D dev
+</pre>
+<p>&#x4E8C;.&#x91CD;&#x65B0;&#x62C9;&#x53D6;&#x8FDC;&#x7A0B;&#x5206;&#x652F;dev&#x5230;&#x672C;&#x5730;</p>
+<p>1.&#x8FD8;&#x662F;&#x5728;master&#x5206;&#x652F;&#x4E0B;&#x8FDB;&#x884C;&#x64CD;&#x4F5C;&#xFF0C;&#x62C9;&#x53D6;&#x8FDC;&#x7A0B;&#x5206;&#x652F;dev&#x5230;&#x672C;&#x5730;</p>
+<pre class="language-text">git fetch origin dev
+</pre>
+<p>2.&#x8FD8;&#x662F;&#x5728;master&#x5206;&#x652F;&#x4E0B;&#x8FDB;&#x884C;&#x64CD;&#x4F5C;&#xFF0C;&#x5728;&#x672C;&#x5730;&#x65B0;&#x5EFA;dev&#x5206;&#x652F;</p>
+<pre class="language-text">git checkout -b dev origin/dev
+</pre>
+<p>3.&#x5207;&#x6362;&#x5230;&#x672C;&#x5730;dev&#x5206;&#x652F;&#xFF0C;&#x628A;dev&#x6240;&#x6709;&#x5185;&#x5BB9;&#x62C9;&#x53D6;&#x5230;&#x672C;&#x5730;</p>
+<pre class="language-text">git pull origin dev
+</pre>
+<p>&#x5B9E;&#x9645;&#x4E0A;&#x4E0A;&#x8FF0;&#x7B2C;3&#x5C0F;&#x6B65;&#x53EF;&#x7701;&#x7565;&#x3002;</p>
+<hr>
+<h3 class="mume-header" id="merge">merge</h3>
+
+<p>&#x6709;&#x65F6;&#x5019;&#x56E0;&#x4E3A;&#x4E00;&#x4E9B;&#x5DEE;&#x5F02;&#x7B49;&#xFF0C;&#x5BFC;&#x81F4;merge&#x62A5;&#x9519;&#xFF1A;</p>
+<pre class="language-text">fatal: refusing to merge unrelated histories&#xFF1A;
+</pre>
+<p>&#x6B64;&#x65F6;&#x6DFB;&#x52A0;&#x4E00;&#x4E2A;&#x53C2;&#x6570;<code>--allow-unrelated-histories</code>&#x5373;&#x53EF;&#xFF0C;&#x5982;</p>
+<pre class="language-text">git merge master --allow-unrelated-histories
+</pre>
+<p>&#x53C2;&#x8003;&#xFF1A;<a href="https://developer.aliyun.com/article/614459">&#x89E3;&#x51B3;Git&#x4E2D;fatal: refusing to merge unrelated histories</a></p>
+<hr>
 <h3 class="mume-header" id="diff">diff</h3>
 
 <p>&#x5E38;&#x7528;&#x4E8E;&#x6BD4;&#x8F83;&#x672C;&#x5730;&#x5206;&#x652F;&#x548C;&#x5BF9;&#x5E94;&#x8FDC;&#x7A0B;&#x5206;&#x652F;&#x7684;&#x533A;&#x522B;&#x3002;&#x53EF;&#x5148;&#x66F4;&#x65B0;&#x4E0B;&#x672C;&#x5730;&#x7684;&#x8FDC;&#x7A0B;&#x5206;&#x652F;&#xFF1A;</p>
@@ -1636,8 +1722,11 @@ git merge FETCH_HEAD
 <pre class="language-text">  git diff [local_branch] [remote]/[remote_branch]
 </pre>
 <p>&#x5176;&#x4E2D;&#x8FD8;&#x6709;<code>--stat --cached --color</code>&#x7B49;&#x53C2;&#x6570;&#x6765;&#x63A7;&#x5236;&#x8F93;&#x51FA;&#x7684;&#x8BE6;&#x5C3D;&#x7A0B;&#x5EA6;&#xFF0C;<code>--stat</code>&#x8868;&#x793A;&#x6458;&#x8981;&#xFF0C;&#x800C;<code>--cached</code>&#x8868;&#x793A;&#x5DF2;&#x7F13;&#x5B58;&#x7684;&#x6539;&#x52A8;&#x3002;&#x7B14;&#x8005;&#x4E00;&#x822C;&#x4F1A;&#x5148;&#x52A0;&#x5165;<code>--stat</code>&#x770B;&#x4E00;&#x4E0B;diff&#x7684;&#x6982;&#x62EC;&#xFF0C;&#x82E5;&#x6709;&#x9700;&#x8981;&#x518D;&#x53BB;&#x6389;<code>--stat</code>&#x770B;&#x8BE6;&#x7EC6;&#x533A;&#x522B;&#xFF0C;&#x5982;&#xFF1A;</p>
-<pre class="language-text">  git --stat diff dev origin/dev
+<pre class="language-text">  git diff --stat dev origin/dev
   git diff dev origin/dev
+</pre>
+<p>&#x5176;&#x5B9E;&#x4E0A;&#x9762;&#x6BD4;&#x8F83;&#x7684;&#x4E24;&#x4E2A;&#x5206;&#x652F;&#xFF0C;&#x4E5F;&#x4E0D;&#x5FC5;&#x5C40;&#x9650;&#x4E8E;&#x4E00;&#x4E2A;&#x672C;&#x5730;&#x5206;&#x652F;&#x548C;&#x4E00;&#x4E2A;&#x8FDC;&#x7A0B;&#x5206;&#x652F;&#xFF0C;&#x4EFB;&#x610F;&#x4E24;&#x4E2A;&#x90FD;&#x53EF;&#x6BD4;&#x8F83;&#x3002;&#x53E6;&#x82E5;&#x60F3;&#x6BD4;&#x8F83;&#x6307;&#x5B9A;&#x6587;&#x4EF6;&#x7684;&#x5DEE;&#x5F02;&#xFF0C;&#x5728;&#x6700;&#x540E;&#x6DFB;&#x52A0;<code>-- [filename]</code>&#x5373;&#x53EF;&#xFF0C;&#x4E14;&#x53EF;&#x540C;&#x65F6;&#x6BD4;&#x8F83;&#x591A;&#x4E2A;&#xFF0C;&#x5982;</p>
+<pre class="language-text">  git diff master dev -- READMD.md index.php
 </pre>
 </li>
 </ul>
@@ -1673,12 +1762,25 @@ build/  # &#x5FFD;&#x7565; build/ &#x76EE;&#x5F55;&#x4E0B;&#x7684;&#x6240;&#x670
 doc/*.txt  # &#x4F1A;&#x5FFD;&#x7565; doc/notes.txt &#x4F46;&#x4E0D;&#x5305;&#x62EC; doc/server/arch.txt
 </pre>
 <p>&#x6B64;&#x5916;&#xFF0C;git &#x5BF9;&#x4E8E; .gitignore &#x914D;&#x7F6E;&#x6587;&#x4EF6;&#x662F;&#x6309;&#x884C;&#x4ECE;&#x4E0A;&#x5230;&#x4E0B;&#x8FDB;&#x884C;&#x89C4;&#x5219;&#x5339;&#x914D;&#x7684;&#xFF0C;&#x610F;&#x5473;&#x7740;&#x5982;&#x679C;&#x524D;&#x9762;&#x7684;&#x89C4;&#x5219;&#x5339;&#x914D;&#x7684;&#x8303;&#x56F4;&#x66F4;&#x5927;&#xFF0C;&#x5219;&#x540E;&#x9762;&#x7684;&#x89C4;&#x5219;&#x5C06;&#x4E0D;&#x4F1A;&#x751F;&#x6548;&#x3002;</p>
+<p>&#x5FFD;&#x7565;&#x5DF2;&#x88AB;track&#x7684;&#x6587;&#x4EF6;&#xFF1A;</p>
+<pre class="language-text">git rm -r --cached .
+</pre>
+<p>&#x5F53;&#x60F3;&#x6307;&#x5B9A;&#x6587;&#x4EF6;&#x65F6;&#xFF0C;&#x5C06;&#x4E0A;&#x9762;&#x7684;<code>.</code>&#x6539;&#x6210;&#x6307;&#x5B9A;&#x7684;&#x6587;&#x4EF6;&#x8DEF;&#x5F84;&#x540D;&#x5373;&#x53EF;&#x3002;</p>
 <h3 class="mume-header" id="commit">commit</h3>
 
 <p>&#x5982;&#x679C;commit&#x6CE8;&#x91CA;&#x5199;&#x9519;&#x4E86;&#xFF0C;&#x53EA;&#x662F;&#x60F3;&#x6539;&#x4E00;&#x4E0B;&#x6CE8;&#x91CA;&#xFF0C;&#x53EA;&#x9700;&#x8981;&#xFF1A;</p>
 <pre class="language-text">git commit --amend
 </pre>
 <p>&#x6B64;&#x65F6;&#x4F1A;&#x8FDB;&#x5165;&#x9ED8;&#x8BA4;vim&#x7F16;&#x8F91;&#x5668;&#xFF0C;&#x4FEE;&#x6539;&#x6CE8;&#x91CA;&#x5B8C;&#x6BD5;&#x540E;&#x4FDD;&#x5B58;&#x5C31;&#x597D;&#x4E86;&#x3002;</p>
+<h3 class="mume-header" id="reset">reset</h3>
+
+<p>&#x5148;&#x901A;&#x8FC7;</p>
+<pre class="language-text">git log --pretty=oneline 
+</pre>
+<p>&#x67E5;&#x627E;&#x5230;&#x5404;&#x6B21;commit&#x7684;&#x5E8F;&#x53F7;&#xFF0C;&#x7136;&#x540E;</p>
+<pre class="language-text">git reset --hard [commit-id] 
+</pre>
+<p>&#x5373;&#x53EF;&#x9000;&#x56DE;&#x5230;&#x8BE5;&#x7248;&#x672C;&#x3002;&#x53EF;&#x9002;&#x7528;&#x4E8E;&#x6DFB;&#x52A0;&#x4E86;&#x5927;&#x6587;&#x4EF6;&#x60F3;&#x64A4;&#x56DE;&#x7B49;&#x60C5;&#x51B5;&#x3002;&#x4F46;<code>hard</code>&#x6709;&#x98CE;&#x9669;&#xFF0C;&#x4F7F;&#x7528;&#x9700;&#x8C28;&#x614E;&#x3002;</p>
 <hr>
 <h1 class="mume-header" id="mac">Mac</h1>
 
@@ -1762,6 +1864,56 @@ code<br>
 <code>\leqslant</code> <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>&#x2A7D;</mo></mrow><annotation encoding="application/x-tex">\leqslant</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7733399999999999em;vertical-align:-0.13667em;"></span><span class="mrel amsrm">&#x2A7D;</span></span></span></span></p>
 <p><code>\raggedright</code> &#x4E24;&#x7AEF;&#x5BF9;&#x9F50;</p>
 <hr>
+<h3 class="mume-header" id="beamer-%E6%8F%92%E5%85%A5-logo">Beamer &#x63D2;&#x5165; logo</h3>
+
+<p>&#x67E5;&#x5230;&#x65B9;&#x5F0F;&#x6709;&#x56DB;&#xFF0C;&#x63A8;&#x8350;&#x7B2C;&#x4E09;&#x79CD;&#x3002;</p>
+<ol>
+<li>&#x666E;&#x901A;&#x63D2;&#x5165;&#xFF0C;&#x5373;&#x5728;<code>\author</code>&#xFF0C;<code>\institute</code>&#x7B49;&#x4F4D;&#x7F6E;<code>\includegraphics</code>&#x5373;&#x53EF;&#x3002;</li>
+<li>&#x5728;&#x5C01;&#x9762;&#x9875;&#x4F7F;&#x7528;<code>\titlegraphic</code>&#x547D;&#x4EE4;&#xFF0C;logo&#x4F4D;&#x4E8E;&#x6700;&#x4E0B;&#x9762;&#x4E00;&#x884C;&#xFF0C;&#x4E0E;&#x65E5;&#x671F;	&#x7B49;&#x5782;&#x76F4;&#x6295;&#x5F71;&#x65E0;&#x4EA4;&#x53C9;&#xFF0C;&#x9ED8;&#x8BA4;&#x5C45;&#x4E2D;&#x3002;&#x53EF;&#x501F;&#x52A9;<code>\hspace</code>&#x548C;<code>\vspace</code>&#x6765;&#x8C03;&#x8282;&#x4F4D;&#x7F6E;&#xFF0C;&#x5982;&#x4E0B;&#x4F8B;&#x4E2D;&#x7684;-10cm&#x8868;&#x793A;&#x53F3;&#x79FB;10cm<pre data-role="codeBlock" data-info class="language-"><code>\titlegraphic{\includegraphics[width=1.6cm]{images/pku_logo.png}\hspace*{-10cm}}
+</code></pre></li>
+<li><code>\logo</code>&#x547D;&#x4EE4;<pre data-role="codeBlock" data-info class="language-"><code>\logo{\includegraphics[height=0.07\textwidth]{images/pku_logo.png}}
+</code></pre>&#x8C03;&#x6574;&#x4F4D;&#x7F6E;&#x4E0E;<code>\titlegraphic</code>&#x7C7B;&#x4F3C;&#xFF0C;&#x9ED8;&#x8BA4;&#x5728;&#x53F3;&#x4E0B;&#x89D2;&#x3002;&#x53E6;&#x8981;&#x60F3;&#x63A7;&#x5236;logo&#x5728;&#x67D0;&#x4E9B;&#x9875;&#x51FA;&#x73B0;&#xFF0C;&#x67D0;&#x4E9B;&#x9875;&#x4E0D;&#x51FA;&#x73B0;&#xFF0C;&#x53EA;&#x9700;&#x8981;&#x5728;&#x76F8;&#x5E94;&#x7684;&#x9875;&#x7684;<code>\begin{frame}</code>&#x524D;&#x4E00;&#x884C;&#x5199;&#x5165;<code>\logo{}</code>&#x547D;&#x4EE4;&#xFF0C;&#x82E5;&#x8BE5;&#x9875;&#x4E0D;&#x9700;&#x8981;logo, &#x53D6;&#x7A7A;<code>\logo{}</code>&#x5373;&#x53EF;&#x3002;<br>
+&#x6CE8;&#xFF1A;&#x6B64;&#x547D;&#x4EE4;&#x8C8C;&#x4F3C;&#x8981;<code>\usepackage{tikz}</code>&#x3002;</li>
+<li>&#x590D;&#x6742;&#x4E00;&#x4E9B;&#xFF0C;<code>\MyLogo</code>&#x4F7F;&#x7528;<code>\usepackage{fancyhdr}</code>&#x5E93;&#x63A7;&#x5236;&#x9875;&#x7709;&#x9875;&#x811A;&#xFF0C;&#x5E38;&#x89C1;&#x4E8E;article&#x7B49;&#x683C;&#x5F0F;&#x3002;<pre data-role="codeBlock" data-info class="language-"><code>\fancyhf{}
+\fancyfoot[R]{
+	\begin{minipage}[c]{0.06\textwidth}
+		\includegraphics[height=7.5mm]{images/pku_logo.png}
+	\end{minipage}}
+% \pagestyle{fancy}
+</code></pre></li>
+</ol>
+<p>&#x53EF;&#x53C2;&#x8003;&#xFF1A;<a href="http://www.mamicode.com/info-detail-1368899.html">&#x5982;&#x4F55;&#x8BA9;Beamer&#x7684;logo&#x653E;&#x5728;&#x53F3;&#x4E0A;&#x89D2;</a></p>
+<p>&#x603B;&#x53C2;&#x8003;&#xFF1A;<a href="https://zhuanlan.zhihu.com/p/137427360">beamer&#x6A21;&#x677F;&#x8BBE;&#x8BA1;&#xFF08;&#x4E03;&#xFF09;titlepage&#x3001;logo&#x548C;&#x76EE;&#x5F55;&#x9875;</a></p>
+<p>&#x4E3E;&#x4F8B;&#xFF1A;</p>
+<pre data-role="codeBlock" data-info class="language-"><code>\logo{\includegraphics[height=0.15\textwidth]{images/pku_logo.png}}
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\logo{\includegraphics[height=0.07\textwidth]{images/pku_logo.png}}
+\begin{frame}{Frame Title}
+  Frame Content...
+\end{frame}
+
+\logo{}
+\begin{frame}{}
+\end{frame}
+</code></pre><p>&#x4E09;&#x9875;&#x7684;logo&#x4F9D;&#x6B21;&#x4E3A;&#x5927;&#x3001;&#x5C0F;&#x3001;&#x65E0;&#x3002;</p>
+<hr>
+<h3 class="mume-header" id="beamer-%E6%8F%92%E5%85%A5-gif">Beamer &#x63D2;&#x5165; GIF</h3>
+
+<pre data-role="codeBlock" data-info class="language-"><code>\usepackage{animate}
+\begin{figure}
+	\centering
+	\animategraphics[height=0.3\textwidth,loop,autoplay]{3}{image_path_dir/image_name_prefix}{1}{7}
+\end{figure}
+</code></pre><p>&#x5176;&#x4E2D;3&#x4E3A;&#x5E27;&#x7387;&#xFF0C;1-7&#x4E3A;&#x56FE;&#x7247;&#x7F16;&#x53F7;&#xFF0C;image_name_prefix&#x8868;&#x793A;&#x56FE;&#x7247;&#x9664;&#x4E86;&#x7F16;&#x53F7;&#x5916;&#x7684;&#x524D;&#x7F00;&#x540D;&#xFF0C;&#x6BD4;&#x5982;&#x56FE;&#x7247;&#x4E3A;see_1.eps&#xFF0C;&#x5219;&#x8BE5;&#x9879;&#x4E3A;see_1&#x3002;</p>
+<hr>
+<h3 class="mume-header" id="%E6%97%A5%E6%9C%9F%E6%98%BE%E7%A4%BA%E4%B8%AD%E6%96%87">&#x65E5;&#x671F;&#x663E;&#x793A;&#x4E2D;&#x6587;</h3>
+
+<pre class="language-text">\renewcommand{\today}{\number\year &#x5E74;\number\month &#x6708;\number\day &#x65E5;}
+</pre>
+<hr>
 <h1 class="mume-header" id="others">Others</h1>
 
 <h3 class="mume-header" id="paper-writing">paper writing</h3>
@@ -1779,26 +1931,26 @@ code<br>
 <p>&#x5176;&#x4E2D;<code>cmd /k</code>&#x8868;&#x793A;cmd&#x540E;&#x9762;&#x7684;&#x547D;&#x4EE4;&#x6267;&#x884C;&#x5B8C;&#x540E;&#x4E0D;&#x5173;&#x95ED;&#x7A97;&#x53E3;&#xFF1B;&#x800C;<code>cmd /c</code>&#x8868;&#x793A;&#x6267;&#x884C;&#x5B8C;cmd&#x547D;&#x4EE4;&#x540E;&#x5173;&#x95ED;&#x7A97;&#x53E3;&#x3002;</p>
 <p>&#x53C2;&#x8003;&#xFF1A;<a href="https://blog.csdn.net/weixin_46909756/article/details/108726489">&#x5199;&#x4E00;&#x4E2A;&#x6253;&#x5F00;cmd&#x7A97;&#x53E3;&#x5E76;&#x6267;&#x884C;cmd&#x547D;&#x4EE4;&#x7684;Windows&#x811A;&#x672C;&#xFF08;.bat&#x6587;&#x4EF6;&#xFF09;</a></p>
 <hr>
+<h3 class="mume-header" id="windows-c%E7%9B%98%E7%A9%BA%E9%97%B4%E4%B8%8D%E8%B6%B3">Windows C&#x76D8;&#x7A7A;&#x95F4;&#x4E0D;&#x8DB3;</h3>
+
+<p>&#x5220;&#x9664;&#x7CFB;&#x7EDF;&#x8FD8;&#x539F;&#x70B9;<br>
+&#x79FB;&#x52A8;&#x641C;&#x7D22;&#x6620;&#x5C04;<br>
+&#x79FB;&#x52A8;Temp&#x6587;&#x4EF6;</p>
+<hr>
+<h3 class="mume-header" id="jupyter-%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AE%BF%E9%97%AE%E5%A4%B1%E8%B4%A5">Jupyter &#x6D4F;&#x89C8;&#x5668;&#x8BBF;&#x95EE;&#x5931;&#x8D25;</h3>
+
+<p>&#x5982;&#x679C;&#x8BBF;&#x95EE;&#x5931;&#x8D25;&#x4E86;&#xFF0C;&#x5219;&#x6709;&#x53EF;&#x80FD;&#x662F;&#x670D;&#x52A1;&#x5668;&#x9632;&#x706B;&#x5899;&#x8BBE;&#x7F6E;&#x7684;&#x95EE;&#x9898;&#xFF0C;&#x6B64;&#x65F6;&#x6700;&#x7B80;&#x5355;&#x7684;&#x65B9;&#x6CD5;&#x662F;&#x5728;&#x672C;&#x5730;&#x5EFA;&#x7ACB;&#x4E00;&#x4E2A; ssh &#x901A;&#x9053;&#xFF1A;<br>
+&#x5728;&#x672C;&#x5730;&#x7EC8;&#x7AEF;&#x4E2D;&#x8F93;&#x5165;</p>
+<pre class="language-text">ssh [server-name]@[server-ip] -L 127.0.0.1:1234:127.0.0.1:8888
+</pre>
+<p>&#x4FBF;&#x53EF;&#x4EE5;&#x5728;<code>localhost:1234</code>&#x76F4;&#x63A5;&#x8BBF;&#x95EE;&#x8FDC;&#x7A0B;&#x7684;jupyter notebook&#x4E86;&#x3002;</p>
+<hr>
 <h3 class="mume-header" id="usb%E5%A4%B1%E6%95%88">USB&#x5931;&#x6548;</h3>
 
 <p>&#x7B14;&#x8005;&#x6709;&#x4E00;&#x5929;&#x6253;&#x5F00;&#x7535;&#x8111;&#xFF08;Windows&#x7CFB;&#x7EDF;&#xFF09;&#x7A81;&#x7136;&#x53D1;&#x73B0;&#x6240;&#x6709;&#x7684;USB&#x63A5;&#x53E3;&#x90FD;&#x5931;&#x6548;&#x4E86;&#xFF0C;&#x5BFC;&#x81F4;&#x5916;&#x63A5;&#x9F20;&#x6807;&#x952E;&#x76D8;&#x90FD;&#x5931;&#x6548;&#xFF0C;&#x63D2;&#x5165;U&#x76D8;&#x4E5F;&#x8BFB;&#x53D6;&#x4E0D;&#x4E86;&#x3002;&#x7F51;&#x4E0A;&#x641C;&#x4E86;&#x5F88;&#x591A;&#x6559;&#x7A0B;&#x90FD;&#x4E0D;&#x7BA1;&#x7528;&#xFF0C;&#x4E00;&#x7C7B;&#x65B9;&#x6CD5;&#x4E3A;&#x7535;&#x8111;&#x5728;&#x8282;&#x7535;&#x6A21;&#x5F0F;&#x4E0B;&#x4F1A;&#x7981;&#x7528;&#x5916;&#x63A5;USB&#x53E3;&#x7B49;&#xFF0C;&#x6240;&#x4EE5;&#x9700;&#x5173;&#x95ED;&#x8FD9;&#x4E9B;&#x8BBE;&#x7F6E;&#xFF0C;&#x8FD8;&#x6709;&#x5378;&#x8F7D;USB&#x9A71;&#x52A8;&#x518D;&#x91CD;&#x88C5;&#x7B49;&#xFF08;&#x53EF;&#x501F;&#x52A9;&#x9A71;&#x52A8;&#x7CBE;&#x7075;&#x7B49;&#x8F6F;&#x4EF6;&#xFF09;&#xFF0C;&#x7B14;&#x8005;&#x8BD5;&#x4E86;&#x5747;&#x65E0;&#x679C;&#x3002;</p>
 <p>&#x5F00;&#x673A;&#x8FDB;&#x5165;BIOS&#x6A21;&#x5F0F;&#xFF0C;&#x5728;<code>System Configuration</code>&#x91CC;&#x6709;&#x4E00;&#x680F;&#x662F;<code>USB Configuration</code>&#xFF0C;&#x52FE;&#x9009;&#x4E0A;<code>Enable USB Boot Support</code>&#x548C;<code>Enable External USB Ports</code>&#xFF1B;&#x53E6;&#x5728;<code>Power Management</code>&#x91CC;&#x6709;&#x4E00;&#x680F;&#x662F;<code>Enable USB Wake Support</code>&#xFF0C;&#x52FE;&#x9009;&#x4E0A;<code>ON</code>&#x3002;&#x6B64;&#x65F6;&#x5F00;&#x673A;&#x540E;&#x4FBF;&#x4E00;&#x5207;&#x6062;&#x590D;&#x5C81;&#x6708;&#x9759;&#x597D;&#x4E86;&#xFF01;</p>
 <p>&#x6B64;&#x6B21;USB&#x5931;&#x6548;&#x83AB;&#x540D;&#x5176;&#x5999;&#xFF08;&#x7CFB;&#x7EDF;&#x66F4;&#x65B0;&#x7684;&#x9505;&#xFF1F;&#xFF09;&#xFF0C;&#x6309;&#x7167;&#x4E0A;&#x8FF0;&#x65B9;&#x6CD5;&#x641E;&#x597D;&#x540E;&#xFF0C;&#x8FC7;&#x4E86;&#x4E24;&#x5929;&#x53C8;&#x5931;&#x6548;&#x4E86;&#xFF0C;&#x4E8E;&#x662F;&#x53C8;&#x91CD;&#x590D;&#x641E;&#x4E86;&#x4E00;&#x6B21;&#xFF0C;&#x540E;&#x6765;&#x5C31;&#x518D;&#x4E5F;&#x6CA1;&#x6709;&#x62BD;&#x98CE;&#x8FC7;&#x3002;</p>
 <p>&#x53E6;&#x5F88;&#x591A;&#x7535;&#x8111;F1~12&#x952E;&#x90FD;&#x6709;&#x53E6;&#x4E00;&#x79CD;&#x5BF9;&#x5E94;&#x7684;&#x529F;&#x80FD;&#xFF0C;&#x5982;F3&#x9664;&#x4E86;&#x4F20;&#x7EDF;&#x7684;&#x529F;&#x80FD;&#x5916;&#x8FD8;&#x53EF;&#x589E;&#x5927;&#x97F3;&#x91CF;&#xFF0C;&#x9ED8;&#x8BA4;&#x7684;&#x662F;&#x4F20;&#x7EDF;&#x529F;&#x80FD;&#x65F6;&#x8981;&#x589E;&#x5927;&#x97F3;&#x91CF;&#x5C31;&#x5F97;&#x6309;&#x4F4F;<code>fn</code>&#x952E;&#x518D;&#x6309;F3&#x4E86;&#x3002;&#x5728;BIOS&#x6A21;&#x5F0F;&#x7684;<code>POST Behavior</code>&#x91CC;&#x6709;&#x4E00;&#x680F;<code>Fn lock</code>&#x7684;<code>Lock Mode</code>&#xFF0C;&#x5176;&#x6709;<code>Lock Mode Standard</code>&#x548C;<code>Lock Mode Secondary</code>&#xFF0C;&#x9009;&#x62E9;&#x4E00;&#x4E2A;&#x5373;&#x53EF;&#x3002;&#x7B14;&#x8005;&#x4E60;&#x60EF;&#x9009;&#x62E9;&#x540E;&#x8005;&#xFF0C;&#x5373;F3&#x9ED8;&#x8BA4;&#x4E3A;&#x589E;&#x5927;&#x97F3;&#x91CF;&#x3002;</p>
-<hr>
-<h3 class="mume-header" id="server-config~202012">server config(~2020.12)</h3>
-
-<p>weiming1&#xFF1A;<br>
-python3.6.2<br>
-torch   0.4.0<br>
-torchvision   0.2.1<br>
-cv2   3.1.0</p>
-<p>PKU163:<br>
-Python3.5.2<br>
-torch   0.4.1<br>
-torchvision   0.2.1<br>
-cv2   3.3.0<br>
-tensorflow   1.4.0</p>
 
       </div>
       

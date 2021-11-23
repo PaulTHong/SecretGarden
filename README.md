@@ -1,2 +1,2 @@
 # SecretGarden
-Welcome to Paul's Hub.
+Welcome to Paul.HT's Hub.
